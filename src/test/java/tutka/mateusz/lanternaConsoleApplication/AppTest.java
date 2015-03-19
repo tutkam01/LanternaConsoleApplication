@@ -1,5 +1,8 @@
 package tutka.mateusz.lanternaConsoleApplication;
 
+import java.io.IOException;
+
+import tutka.mateusz.console_application.Application;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -30,9 +33,16 @@ public class AppTest
 
     /**
      * Rigourous Test :-)
+     * @throws IOException 
+     * @throws InterruptedException 
      */
-    public void testApp()
+    public void testApp() throws InterruptedException, IOException
     {
-        assertTrue( true );
+//        assertTrue( true );
+    	Application application = new Application();
+    	application.getCommandToMethodMap().put("add node", null);
+    	application.getCommandToMethodMap().put("command", null);
+		 
+    	application.run();
     }
 }
