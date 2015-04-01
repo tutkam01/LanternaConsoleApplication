@@ -12,11 +12,13 @@ import tutka.mateusz.models.Caret;
 import tutka.mateusz.models.Word;
 
 import com.googlecode.lanterna.SGR;
+import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.terminal.swing.ScrollingSwingTerminal;
 import com.googlecode.lanterna.terminal.swing.SwingTerminalColorConfiguration;
 import com.googlecode.lanterna.terminal.swing.SwingTerminalDeviceConfiguration;
 import com.googlecode.lanterna.terminal.swing.SwingTerminalFontConfiguration;
+import com.googlecode.lanterna.terminal.swing.SwingTerminalDeviceConfiguration.CursorStyle;
 
 @SuppressWarnings("serial")
 public class UserTerminal extends JFrame {
@@ -32,8 +34,10 @@ public class UserTerminal extends JFrame {
     	this.caret = Caret.getInstance();
     	this.word = new Word();
         initComponents();
+        SwingTerminalDeviceConfiguration deviceConfig =  new SwingTerminalDeviceConfiguration(2000, 500, CursorStyle.REVERSED, new TextColor.RGB(255, 255, 255), true).withLineBufferScrollbackSize(150);
+        
         scrollingSwingTerminal = new ScrollingSwingTerminal(
-                SwingTerminalDeviceConfiguration.DEFAULT.withLineBufferScrollbackSize(150),
+        		deviceConfig,
                 SwingTerminalFontConfiguration.DEFAULT,
                 SwingTerminalColorConfiguration.DEFAULT);
         panelTerminalContainer.add(scrollingSwingTerminal, BorderLayout.CENTER);

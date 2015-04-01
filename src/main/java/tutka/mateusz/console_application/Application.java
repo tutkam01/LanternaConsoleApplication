@@ -14,7 +14,7 @@ import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 
 /**
- * Hello world!
+ * Application
  *
  */
 public class Application {
@@ -34,17 +34,17 @@ private UserTerminal userTerminal;
 	}
 
 	public void run() throws InterruptedException, IOException{
-//		userTerminal.startUserTerminal();
 		userTerminal.setVisible(true);
 		
 		while(true) {
 		    Thread.sleep(1);
 		    currentKey = userTerminal.readInput();
+		    
 			if (currentKey != null) {
+				System.out.println(getColumnsNumber());
 				if (currentKey.getKeyType() == KeyType.Enter) {
 					handleEnterKey();
 				}else if(currentKey.getKeyType() == KeyType.Escape){
-//					userTerminal.setVisible(false);
 					userTerminal.dispatchEvent(new WindowEvent(userTerminal, WindowEvent.WINDOW_CLOSING));
 					break;
 				}else{
@@ -60,7 +60,6 @@ private UserTerminal userTerminal;
 			}   
 		     
 		 }
-		System.out.println("koniec");
 	}
 
 	private boolean isCurrentKeySpacebar() {
@@ -68,7 +67,20 @@ private UserTerminal userTerminal;
 	}
 
 	private void shiftCaret() {
+		handleEndOfTerminalRow();
+		
 		userTerminal.getCaret().setX(userTerminal.getCaret().getX() + 1);
+		
+		System.out.println("X = " + userTerminal.getCaret().getX());
+		System.out.println("Y = " + userTerminal.getCaret().getY());
+	}
+
+	private void handleEndOfTerminalRow() {
+		if(userTerminal.getCaret().getX() == getColumnsNumber()-1){
+			int[] carretPosition = new int[]{-1, (userTerminal.getCaret().getY()<16)?(userTerminal.getCaret().getY() + 1): getRowsNumber()-1};
+			userTerminal.getCaret().setX(carretPosition[0]);
+			userTerminal.getCaret().setY(carretPosition[1]);
+		}
 	}
 
 	private void sendCharacterToConsole() {
@@ -76,25 +88,21 @@ private UserTerminal userTerminal;
 		userTerminal.getTerminal().flush();
 	}
 
-//	private void exitProgramme() {
-//		try {
-//			userTerminal.getScreen().stopScreen();
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//	}
-
 	private void handleEnterKey() {
-		int[] carretPosition = new int[]{0, (userTerminal.getCaret().getY()<16)?(userTerminal.getCaret().getY() + 1): 16};
-//		userTerminal.getTerminal().setCursorPosition(carretPosition[0], carretPosition[1]);
-		System.out.println(userTerminal.getTerminal().getCursor().toString());
-		System.out.println(userTerminal.getTerminal().getTerminalSize());
+		int[] carretPosition = new int[]{0, (userTerminal.getCaret().getY()<16)?(userTerminal.getCaret().getY() + 1): getRowsNumber()-1};
 		userTerminal.getTerminal().putCharacter('\n');
 		userTerminal.getTerminal().flush();
 		userTerminal.getCaret().setX(carretPosition[0]);
 		userTerminal.getCaret().setY(carretPosition[1]);
 		userTerminal.getWord().resetWord();
+	}
+	
+	private int getColumnsNumber() {
+		return userTerminal.getTerminal().getTerminalSize().getColumns();
+	}
+	
+	private int getRowsNumber() {
+		return userTerminal.getTerminal().getTerminalSize().getRows();
 	}
 	
 	private void handleKeyWords(){
