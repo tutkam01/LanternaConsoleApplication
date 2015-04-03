@@ -70,6 +70,7 @@ private UserTerminal userTerminal;
 		handleEndOfTerminalRow();
 		
 		userTerminal.getCaret().setX(userTerminal.getCaret().getX() + 1);
+		userTerminal.getCaret().setAbsolute_x(userTerminal.getCaret().getAbsolute_x() + 1);
 		
 		System.out.println("X = " + userTerminal.getCaret().getX());
 		System.out.println("Y = " + userTerminal.getCaret().getY());
@@ -77,9 +78,14 @@ private UserTerminal userTerminal;
 
 	private void handleEndOfTerminalRow() {
 		if(userTerminal.getCaret().getX() == getColumnsNumber()-1){
-			int[] carretPosition = new int[]{-1, (userTerminal.getCaret().getY()<16)?(userTerminal.getCaret().getY() + 1): getRowsNumber()-1};
+			int[] carretPosition = new int[]{-1, (userTerminal.getCaret().getY()<getRowsNumber()-1)?(userTerminal.getCaret().getY() + 1): getRowsNumber()-1};
 			userTerminal.getCaret().setX(carretPosition[0]);
 			userTerminal.getCaret().setY(carretPosition[1]);
+			int[] absoluteCarretPosition = new int[]{-1, userTerminal.getCaret().getAbsolute_y() + 1};
+			userTerminal.getCaret().setAbsolute_x(absoluteCarretPosition[0]);
+			userTerminal.getCaret().setAbsolute_y(absoluteCarretPosition[1]);
+			
+			
 		}
 	}
 
@@ -89,11 +95,14 @@ private UserTerminal userTerminal;
 	}
 
 	private void handleEnterKey() {
-		int[] carretPosition = new int[]{0, (userTerminal.getCaret().getY()<16)?(userTerminal.getCaret().getY() + 1): getRowsNumber()-1};
+		int[] carretPosition = new int[]{0, (userTerminal.getCaret().getY()<getRowsNumber()-1)?(userTerminal.getCaret().getY() + 1): getRowsNumber()-1};
+		int[] absoluteCarretPosition = new int[]{0, userTerminal.getCaret().getAbsolute_y() + 1};
 		userTerminal.getTerminal().putCharacter('\n');
 		userTerminal.getTerminal().flush();
 		userTerminal.getCaret().setX(carretPosition[0]);
 		userTerminal.getCaret().setY(carretPosition[1]);
+		userTerminal.getCaret().setAbsolute_x(absoluteCarretPosition[0]);
+		userTerminal.getCaret().setAbsolute_y(absoluteCarretPosition[1]);
 		userTerminal.getWord().resetWord();
 	}
 	

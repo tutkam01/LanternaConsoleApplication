@@ -12,8 +12,11 @@ import tutka.mateusz.models.Caret;
 import tutka.mateusz.models.Word;
 
 import com.googlecode.lanterna.SGR;
+import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.input.KeyStroke;
+import com.googlecode.lanterna.terminal.ResizeListener;
+import com.googlecode.lanterna.terminal.Terminal;
 import com.googlecode.lanterna.terminal.swing.ScrollingSwingTerminal;
 import com.googlecode.lanterna.terminal.swing.SwingTerminalColorConfiguration;
 import com.googlecode.lanterna.terminal.swing.SwingTerminalDeviceConfiguration;
@@ -21,7 +24,7 @@ import com.googlecode.lanterna.terminal.swing.SwingTerminalFontConfiguration;
 import com.googlecode.lanterna.terminal.swing.SwingTerminalDeviceConfiguration.CursorStyle;
 
 @SuppressWarnings("serial")
-public class UserTerminal extends JFrame {
+public class UserTerminal extends JFrame implements ResizeListener{
 	private final ScrollingSwingTerminal scrollingSwingTerminal;
 	private javax.swing.JPanel panelTerminalContainer;
 	private Caret caret;
@@ -41,6 +44,7 @@ public class UserTerminal extends JFrame {
                 SwingTerminalFontConfiguration.DEFAULT,
                 SwingTerminalColorConfiguration.DEFAULT);
         panelTerminalContainer.add(scrollingSwingTerminal, BorderLayout.CENTER);
+        scrollingSwingTerminal.addResizeListener(this);
         pack();
     }
     
@@ -123,6 +127,13 @@ public class UserTerminal extends JFrame {
 	public Word getWord() {
 		return this.word;
 	}
+	
+	public void onResized(Terminal terminal, TerminalSize newSize) {
+//		scrollingSwingTerminal.setCursorPosition(caret.getX(), caret.getY());
+//		scrollingSwingTerminal.setCursorPosition(22, 2);
+		scrollingSwingTerminal.setCursorPosition(caret.getAbsolute_x(), caret.getAbsolute_y());
+		caret.setY(caret.getAbsolute_y());
+	}
     
     public void startUserTerminal() {
         /* Set the Nimbus look and feel */
@@ -150,5 +161,8 @@ public class UserTerminal extends JFrame {
             }
         });
     }
+
+	
+    
     
 }

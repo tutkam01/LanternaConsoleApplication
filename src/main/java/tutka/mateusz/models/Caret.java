@@ -5,6 +5,8 @@ public class Caret {
 	private static final Caret caretInstance = new Caret(0,0);
 	private int x;
 	private int y;
+	private int absolute_x;
+	private int absolute_y;
 	
 	public static Caret getInstance(){
 		return caretInstance;
@@ -14,7 +16,10 @@ public class Caret {
 	private Caret(int x, int y){
 		this.x = x;
 		this.y = y;
+		this.absolute_x = x;
+		this.absolute_y = y;
 	}
+	
 	public int getX() {
 		return x;
 	}
@@ -26,5 +31,24 @@ public class Caret {
 	}
 	public void setY(int y) {
 		this.y = y;
+	}
+	
+	public int getAbsolute_x() {
+		return absolute_x;
+	}
+
+
+	public void setAbsolute_x(int absolute_x) {
+		this.absolute_x = absolute_x;
+	}
+
+
+	public int getAbsolute_y() {
+		return absolute_y;
+	}
+
+
+	public void setAbsolute_y(int absolute_y) {
+		this.absolute_y = absolute_y;
 	}
 }
