@@ -129,9 +129,11 @@ public class UserTerminal extends JFrame implements ResizeListener{
 	}
 	
 	public void onResized(Terminal terminal, TerminalSize newSize) {
-//		scrollingSwingTerminal.setCursorPosition(caret.getX(), caret.getY());
-//		scrollingSwingTerminal.setCursorPosition(22, 2);
-		scrollingSwingTerminal.setCursorPosition(caret.getAbsolute_x(), caret.getAbsolute_y());
+		try{
+			scrollingSwingTerminal.setCursorPosition(caret.getAbsolute_x(), caret.getAbsolute_y());
+		}catch(IndexOutOfBoundsException e){
+			//terminal shrinked hiding cursor
+		}
 		caret.setY(caret.getAbsolute_y());
 	}
     

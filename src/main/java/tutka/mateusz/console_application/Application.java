@@ -35,19 +35,23 @@ private UserTerminal userTerminal;
 
 	public void run() throws InterruptedException, IOException{
 		userTerminal.setVisible(true);
-		
+		handleInputStream();
+	}
+
+	private void handleInputStream() throws InterruptedException, IOException {
 		while(true) {
 		    Thread.sleep(1);
 		    currentKey = userTerminal.readInput();
 		    
 			if (currentKey != null) {
-				System.out.println(getColumnsNumber());
 				if (currentKey.getKeyType() == KeyType.Enter) {
 					handleEnterKey();
+				}else if(currentKey.getKeyType() == KeyType.ArrowLeft){
+					moveCursor(-1, 0);
 				}else if(currentKey.getKeyType() == KeyType.Escape){
 					userTerminal.dispatchEvent(new WindowEvent(userTerminal, WindowEvent.WINDOW_CLOSING));
 					break;
-				}else{
+				}else if(currentKey.getKeyType() == KeyType.Character){
 					sendCharacterToConsole();
 					shiftCaret();
 					keys.add(currentKey);
@@ -56,6 +60,8 @@ private UserTerminal userTerminal;
 					}else {
 						userTerminal.getWord().addKey(currentKey);						
 					}
+				}else{
+					//this type of input is note supported
 				}
 			}   
 		     
@@ -84,8 +90,21 @@ private UserTerminal userTerminal;
 			int[] absoluteCarretPosition = new int[]{-1, userTerminal.getCaret().getAbsolute_y() + 1};
 			userTerminal.getCaret().setAbsolute_x(absoluteCarretPosition[0]);
 			userTerminal.getCaret().setAbsolute_y(absoluteCarretPosition[1]);
-			
-			
+		}
+	}
+	
+	private void moveCursor(int shift_x, int shift_y){
+		int[] carretPosition = new int[]{userTerminal.getCaret().getX() + shift_x, userTerminal.getCaret().getY() + shift_y};
+		userTerminal.getCaret().setX(carretPosition[0]);
+		userTerminal.getCaret().setY(carretPosition[1]);
+		int[] absoluteCarretPosition = new int[]{userTerminal.getCaret().getAbsolute_x() + shift_x, userTerminal.getCaret().getAbsolute_y() + shift_y};
+		userTerminal.getCaret().setAbsolute_x(absoluteCarretPosition[0]);
+		userTerminal.getCaret().setAbsolute_y(absoluteCarretPosition[1]);
+		
+		try{
+			userTerminal.getTerminal().setCursorPosition(carretPosition[0], carretPosition[1]);
+		}catch(IndexOutOfBoundsException e){
+			//impossible position out of terminal's boundery.
 		}
 	}
 
