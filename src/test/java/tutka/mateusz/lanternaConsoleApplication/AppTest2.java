@@ -9,6 +9,8 @@ public class AppTest2 {
 		Application application = new Application();
     	application.getCommandToMethodMap().put("add node", null);
     	application.getCommandToMethodMap().put("command", null);
+    	application.getCommandToMethodMap().put("set", null);
+    	application.getCommandToMethodMap().put("as child of", null);
 		 
     	application.run();
 	}

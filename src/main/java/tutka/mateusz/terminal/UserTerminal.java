@@ -3,11 +3,20 @@ package tutka.mateusz.terminal;
 import java.awt.BorderLayout;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 
+import tutka.mateusz.interfaces.KeyHandler;
+import tutka.mateusz.keys.ArrowLeftKeyHandler;
+import tutka.mateusz.keys.ArrowRightKeyHandler;
+import tutka.mateusz.keys.CharacterKeyHandler;
+import tutka.mateusz.keys.EnterKeyHandler;
+import tutka.mateusz.keys.EscapeKeyHandler;
 import tutka.mateusz.models.Caret;
 import tutka.mateusz.models.Word;
 
@@ -15,6 +24,7 @@ import com.googlecode.lanterna.SGR;
 import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.input.KeyStroke;
+import com.googlecode.lanterna.input.KeyType;
 import com.googlecode.lanterna.terminal.ResizeListener;
 import com.googlecode.lanterna.terminal.Terminal;
 import com.googlecode.lanterna.terminal.swing.ScrollingSwingTerminal;
@@ -29,13 +39,26 @@ public class UserTerminal extends JFrame implements ResizeListener{
 	private javax.swing.JPanel panelTerminalContainer;
 	private Caret caret;
     private Word word;
+    private Map<KeyType, KeyHandler> keys;
+    private Set<String> keyWords;
+    
+    
 
     /**
-     * Creates new form ScrollingSwingTerminalTest
-     */
-    public UserTerminal() {
+     * Creates new user's terminal.
+     */	
+    public UserTerminal(Set<String> keyWords) {
     	this.caret = Caret.getInstance();
     	this.word = new Word();
+    	this.keyWords = keyWords;
+    	
+    	keys = new HashMap<KeyType, KeyHandler>();
+    	keys.put(KeyType.Enter, new EnterKeyHandler());
+    	keys.put(KeyType.ArrowLeft, new ArrowLeftKeyHandler());
+    	keys.put(KeyType.ArrowRight, new ArrowRightKeyHandler());
+    	keys.put(KeyType.Escape, new EscapeKeyHandler());
+    	keys.put(KeyType.Character, new CharacterKeyHandler(keyWords));
+    	
         initComponents();
         SwingTerminalDeviceConfiguration deviceConfig =  new SwingTerminalDeviceConfiguration(2000, 500, CursorStyle.REVERSED, new TextColor.RGB(255, 255, 255), true).withLineBufferScrollbackSize(150);
         
@@ -101,7 +124,17 @@ public class UserTerminal extends JFrame implements ResizeListener{
     
     public void putString(String stringToSend){
     	List<Character> characters = returnCharacters(changeStyle(stringToSend));
-    	scrollingSwingTerminal.setCursorPosition(this.word.getStartCaretPosition(), this.caret.getY());
+    	try{
+    		scrollingSwingTerminal.setCursorPosition(this.word.getStartCaretPosition(), this.caret.getY());
+    	}catch(IndexOutOfBoundsException e){
+    		scrollingSwingTerminal.clearScreen();
+    		scrollingSwingTerminal.setCursorPosition(0, 0);
+    		caret.setX(0);
+    		caret.setY(0);
+    		caret.setAbsolute_x(0);
+    		caret.setAbsolute_y(0);
+    		
+    	}
     	scrollingSwingTerminal.enableSGR(SGR.BOLD);
 		for(Character character: characters){
 			scrollingSwingTerminal.putCharacter(character);
@@ -111,6 +144,80 @@ public class UserTerminal extends JFrame implements ResizeListener{
     	
     	
     }
+    
+	public void sendCharacterToConsole(KeyStroke currentKey) {
+		scrollingSwingTerminal.putCharacter(currentKey.getCharacter());
+		scrollingSwingTerminal.flush();
+	}
+	
+	public void shiftCaret() {
+		handleEndOfTerminalRow();
+		
+		caret.setX(caret.getX() + 1);
+		caret.setAbsolute_x(caret.getAbsolute_x() + 1);
+		
+		System.out.println("X = " + caret.getX());
+		System.out.println("Y = " + caret.getY());
+	}
+	
+	public void handleKeyWords(KeyStroke currentKey){
+		for(String keyWord: keyWords){
+			if(keyWord.contains(" ")){
+				for(String wordString: getSubKeyWords(keyWord)){
+					if(returnString().equalsIgnoreCase(wordString)){
+						word.addKey(currentKey);
+						return;
+					}
+				}					
+			}
+			
+			if(returnString().equalsIgnoreCase(keyWord)){
+				putString(returnString());
+				getWord().resetWord();
+				return;
+			}
+		}
+		
+		getWord().resetWord();
+	}
+	
+	private List<String> getSubKeyWords(String keyWord) {
+		List<String> subKeyWords = new ArrayList<String>();
+		String[] parts = keyWord.split(" ");
+		String subKeyWord = parts[0];
+		subKeyWords.add(subKeyWord);
+		for(int i=1;i<parts.length-1;i++){
+			subKeyWord = subKeyWord + " " + parts[i];
+			subKeyWords.add(subKeyWord);
+		}
+		return subKeyWords;
+	}
+	
+	private void handleEndOfTerminalRow() {
+		if(caret.getX() == getColumnsNumber()-1){
+			int[] carretPosition = new int[]{-1, (caret.getY()<getRowsNumber()-1)?(caret.getY() + 1): getRowsNumber()-1};
+			caret.setX(carretPosition[0]);
+			caret.setY(carretPosition[1]);
+			int[] absoluteCarretPosition = new int[]{-1, caret.getAbsolute_y() + 1};
+			caret.setAbsolute_x(absoluteCarretPosition[0]);
+			caret.setAbsolute_y(absoluteCarretPosition[1]);
+		}
+	}
+    
+    public void moveCursorBy(int shift_x, int shift_y){
+		int[] carretPosition = new int[]{caret.getX() + shift_x, caret.getY() + shift_y};
+		caret.setX(carretPosition[0]);
+		caret.setY(carretPosition[1]);
+		int[] absoluteCarretPosition = new int[]{caret.getAbsolute_x() + shift_x, caret.getAbsolute_y() + shift_y};
+		caret.setAbsolute_x(absoluteCarretPosition[0]);
+		caret.setAbsolute_y(absoluteCarretPosition[1]);
+		
+		try{
+			scrollingSwingTerminal.setCursorPosition(carretPosition[0], carretPosition[1]);
+		}catch(IndexOutOfBoundsException e){
+			//position out of terminal's boundery.
+		}
+	}
     
 	public KeyStroke readInput() throws IOException {
 		return scrollingSwingTerminal.readInput();
@@ -128,17 +235,35 @@ public class UserTerminal extends JFrame implements ResizeListener{
 		return this.word;
 	}
 	
+	public Map<KeyType, KeyHandler> getKeys(){
+		return keys;
+	}
+	
 	public void onResized(Terminal terminal, TerminalSize newSize) {
 		try{
 			scrollingSwingTerminal.setCursorPosition(caret.getAbsolute_x(), caret.getAbsolute_y());
 		}catch(IndexOutOfBoundsException e){
 			//terminal shrinked hiding cursor
+			caret.setY(getRowsNumber()-1);
 		}
 		caret.setY(caret.getAbsolute_y());
 	}
+	
+	public int getRowsNumber() {
+		return scrollingSwingTerminal.getTerminalSize().getRows();
+	}
+	
+	public int getColumnsNumber() {
+		return scrollingSwingTerminal.getTerminalSize().getColumns();
+	}
+	
+	public boolean isCurrentKeySpacebar(KeyStroke currentKey) {
+		return currentKey.getCharacter() == ' ';
+	}
+	
+	
     
     public void startUserTerminal() {
-        /* Set the Nimbus look and feel */
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         }
@@ -154,14 +279,8 @@ public class UserTerminal extends JFrame implements ResizeListener{
         catch(javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(UserTerminal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-//            @Override
-			public void run() {
-                new UserTerminal().setVisible(true);
-            }
-        });
+        
+        setVisible(true);
     }
 
 	
