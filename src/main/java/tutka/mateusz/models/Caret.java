@@ -7,6 +7,7 @@ public class Caret {
 	private int y;
 	private int absolute_x;
 	private int absolute_y;
+	private Position position;
 	
 	public static Caret getInstance(){
 		return caretInstance;
@@ -18,6 +19,10 @@ public class Caret {
 		this.y = y;
 		this.absolute_x = x;
 		this.absolute_y = y;
+	}
+	
+	public Position getPosition(){
+		return new Position(x, y);
 	}
 	
 	public int getX() {

@@ -17,6 +17,9 @@ public class EnterKeyHandler implements KeyHandler {
 		userTerminal.getCaret().setAbsolute_x(absoluteCarretPosition[0]);
 		userTerminal.getCaret().setAbsolute_y(absoluteCarretPosition[1]);
 		userTerminal.getWord().resetWord();
+		
+		userTerminal.getCommandsHistory().add(userTerminal.getCurrentCommand());
+		userTerminal.getCurrentCommand().getPositionKeyMap().clear();
 
 	}
 

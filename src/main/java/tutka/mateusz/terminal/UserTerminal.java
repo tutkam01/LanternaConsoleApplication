@@ -18,6 +18,7 @@ import tutka.mateusz.keys.CharacterKeyHandler;
 import tutka.mateusz.keys.EnterKeyHandler;
 import tutka.mateusz.keys.EscapeKeyHandler;
 import tutka.mateusz.models.Caret;
+import tutka.mateusz.models.Command;
 import tutka.mateusz.models.Word;
 
 import com.googlecode.lanterna.SGR;
@@ -41,6 +42,8 @@ public class UserTerminal extends JFrame implements ResizeListener{
     private Word word;
     private Map<KeyType, KeyHandler> keys;
     private Set<String> keyWords;
+    private ArrayList<Command> commandsHistory;
+    private Command currentCommand;
     
     
 
@@ -51,6 +54,8 @@ public class UserTerminal extends JFrame implements ResizeListener{
     	this.caret = Caret.getInstance();
     	this.word = new Word();
     	this.keyWords = keyWords;
+    	this.commandsHistory = new ArrayList<Command>();
+    	this.currentCommand = new Command();
     	
     	keys = new HashMap<KeyType, KeyHandler>();
     	keys.put(KeyType.Enter, new EnterKeyHandler());
@@ -71,7 +76,15 @@ public class UserTerminal extends JFrame implements ResizeListener{
         pack();
     }
     
-    private void initComponents() {
+    public ArrayList<Command> getCommandsHistory() {
+		return commandsHistory;
+	}
+
+	public Command getCurrentCommand() {
+		return currentCommand;
+	}
+
+	private void initComponents() {
         panelTerminalContainer = new javax.swing.JPanel();
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
