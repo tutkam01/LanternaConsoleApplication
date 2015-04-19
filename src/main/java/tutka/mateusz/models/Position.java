@@ -42,6 +42,11 @@ public class Position implements Comparable<Position> {
 			return 1;
 		}
 	}
+	
+	@Override
+	public String toString(){
+		return "[" + x + ", " + y + "]"; 
+	}
 
 	
 }

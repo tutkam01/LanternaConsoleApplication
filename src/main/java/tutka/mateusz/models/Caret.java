@@ -56,4 +56,5 @@ public class Caret {
 	public void setAbsolute_y(int absolute_y) {
 		this.absolute_y = absolute_y;
 	}
+	
 }

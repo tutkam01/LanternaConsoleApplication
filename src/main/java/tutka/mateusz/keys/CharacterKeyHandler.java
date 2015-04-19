@@ -5,12 +5,11 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import com.googlecode.lanterna.input.KeyStroke;
-import com.googlecode.lanterna.input.KeyType;
-
 import tutka.mateusz.interfaces.KeyHandler;
 import tutka.mateusz.models.Position;
 import tutka.mateusz.terminal.UserTerminal;
+
+import com.googlecode.lanterna.input.KeyStroke;
 
 public class CharacterKeyHandler implements KeyHandler {
 	private Set<String> keyWords;
@@ -24,37 +23,89 @@ public class CharacterKeyHandler implements KeyHandler {
 		userTerminal.shiftCaret();
 		if(userTerminal.isCurrentKeySpacebar(keyToHandle)){
 			userTerminal.handleKeyWords(keyToHandle);
-			handleCommandShift(userTerminal);
 		}else {
 			userTerminal.getWord().addKey(keyToHandle);						
 		}
 		
-		Position position = new Position(userTerminal.getCaret().getX(), userTerminal.getCaret().getY());
-		userTerminal.getCurrentCommand().getPositionKeyMap().put(position, keyToHandle);
+		handleCommand(userTerminal, keyToHandle);
 	}
 	
-	private void handleCommandShift(UserTerminal userTerminal){
+	private void handleCommand(UserTerminal userTerminal, KeyStroke keyToHandle){
 		
-
-		if(userTerminal.getCaret().getPosition().compareTo(userTerminal.getCurrentCommand().getPositionKeyMap().lastKey())<=0){
-			TreeMap<Position, KeyStroke> afterShift = new TreeMap<Position, KeyStroke>();
-			SortedMap<Position, KeyStroke> notShiftedPart = userTerminal.getCurrentCommand().getPositionKeyMap().headMap(new Position(userTerminal.getCaret().getX(), userTerminal.getCaret().getY()));
-			afterShift.putAll(notShiftedPart);
+		if(isCommandNotEmpty(userTerminal) && isCurrentCursorPositionInTheMiddleOfCommand(userTerminal)){
+			System.out.println("Caret: " + userTerminal.getCaret().getPosition().toString());
+			System.out.println("End command: " + userTerminal.getCurrentCommand().getPositionKeyMap().lastKey().toString());
 			
-			afterShift.put(new Position(userTerminal.getCaret().getX(), userTerminal.getCaret().getY()), new KeyStroke(' ', false, false));
+			TreeMap<Position, KeyStroke> commandAfterShift = getCommandAfterShift(userTerminal,keyToHandle);
+			userTerminal.getCurrentCommand().getPositionKeyMap().putAll(commandAfterShift);
 			
-			SortedMap<Position, KeyStroke> shiftedPart = userTerminal.getCurrentCommand().getPositionKeyMap().tailMap(new Position(userTerminal.getCaret().getX(), userTerminal.getCaret().getY()));
-			
-			for(Map.Entry<Position, KeyStroke> entry: shiftedPart.entrySet()){
-				Position newPosition = new Position(entry.getKey().getX() + 1, entry.getKey().getY());
-				afterShift.put(newPosition, entry.getValue());
-				//zmenic polozenie kursora?
-				userTerminal.getTerminal().putCharacter(entry.getValue().getCharacter());
-			}
-			userTerminal.getTerminal().setCursorPosition(userTerminal.getCaret().getX(), userTerminal.getCaret().getY());
-			userTerminal.getCurrentCommand().getPositionKeyMap().putAll(afterShift);
-			
+		}else{
+			Position position = getKeyToHandlePosition(userTerminal);
+			addCurrentCharacterToCommand(userTerminal, keyToHandle, position);
 		}
 	}
+
+	private void addCurrentCharacterToCommand(UserTerminal userTerminal, KeyStroke keyToHandle,
+			Position position) {
+		userTerminal.getCurrentCommand().getPositionKeyMap().put(position, keyToHandle);
+	}
+
+	private TreeMap<Position, KeyStroke> getCommandAfterShift(UserTerminal userTerminal,
+			KeyStroke keyToHandle) {
+		SortedMap<Position, KeyStroke> notShiftedPart = getNotShiftedPart(userTerminal);
+		SortedMap<Position, KeyStroke> toShiftPart = getToShiftPart(userTerminal);		
+		
+		TreeMap<Position, KeyStroke> afterShift = new TreeMap<Position, KeyStroke>();
+		afterShift.putAll(notShiftedPart);			
+		afterShift.put(getKeyToHandlePosition(userTerminal), keyToHandle);			
+		shiftToShiftPart(userTerminal, afterShift, toShiftPart);
+		setCursorToCurrentPosition(userTerminal);
+		return afterShift;
+	}
+
+	private boolean isCurrentCursorPositionInTheMiddleOfCommand(UserTerminal userTerminal) {
+		return userTerminal.getCaret().getPosition().compareTo(userTerminal.getCurrentCommand().getPositionKeyMap().lastKey())<=0;
+	}
+
+	private boolean isCommandNotEmpty(UserTerminal userTerminal) {
+		return !userTerminal.getCurrentCommand().getPositionKeyMap().isEmpty();
+	}
+
+	private void setCursorToCurrentPosition(UserTerminal userTerminal) {
+		userTerminal.getTerminal().setCursorPosition(userTerminal.getCaret().getX(), userTerminal.getCaret().getY());
+	}
+
+	private Position getKeyToHandlePosition(UserTerminal userTerminal) {
+		return new Position(userTerminal.getCaret().getX(), userTerminal.getCaret().getY());
+	}
+
+	private void shiftToShiftPart(UserTerminal userTerminal,TreeMap<Position, KeyStroke> afterShift, SortedMap<Position, KeyStroke> toShiftPart) {
+		for(Map.Entry<Position, KeyStroke> entry: toShiftPart.entrySet()){
+			Position newPosition = calculateNewCharactersPosition(userTerminal, entry);
+			afterShift.put(newPosition, entry.getValue());
+			userTerminal.getTerminal().putCharacter(entry.getValue().getCharacter());
+		}
+	}
+
+	private Position calculateNewCharactersPosition(UserTerminal userTerminal,
+			Map.Entry<Position, KeyStroke> entry) {
+		Position newPosition;
+		if(entry.getKey().getX() == userTerminal.getColumnsNumber()-1){
+			newPosition = new Position(0, entry.getKey().getY() + 1);
+		}else{
+		    newPosition = new Position(entry.getKey().getX() + 1, entry.getKey().getY());
+		}
+		return newPosition;
+	}
+
+	private SortedMap<Position, KeyStroke> getToShiftPart(UserTerminal userTerminal) {
+		return userTerminal.getCurrentCommand().getPositionKeyMap().tailMap(getKeyToHandlePosition(userTerminal));
+	}
+
+	private SortedMap<Position, KeyStroke> getNotShiftedPart(UserTerminal userTerminal) {
+		return userTerminal.getCurrentCommand().getPositionKeyMap().headMap(getKeyToHandlePosition(userTerminal));
+	}
+	
+	
 
 }

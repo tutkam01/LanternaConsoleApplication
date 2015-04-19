@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import javax.swing.JFrame;
 import javax.swing.UIManager;
@@ -229,6 +230,7 @@ public class UserTerminal extends JFrame implements ResizeListener{
 			scrollingSwingTerminal.setCursorPosition(carretPosition[0], carretPosition[1]);
 		}catch(IndexOutOfBoundsException e){
 			//position out of terminal's boundery.
+			System.out.println(e);
 		}
 	}
     
