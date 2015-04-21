@@ -276,6 +276,14 @@ public class UserTerminal extends JFrame implements ResizeListener{
 		return currentKey.getCharacter() == ' ';
 	}
 	
+	public boolean isCommandNotEmpty() {
+		return !currentCommand.getPositionKeyMap().isEmpty();
+	}
+	
+	public boolean isCurrentCursorPositionInTheMiddleOfCommand() {
+		return caret.getPosition().compareTo(currentCommand.getPositionKeyMap().lastKey())<=0;
+	}
+	
 	
     
     public void startUserTerminal() {
