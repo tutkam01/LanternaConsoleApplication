@@ -31,27 +31,29 @@ public class CharacterKeyHandler implements KeyHandler {
 
 			@Override
 			protected Position calculateNewCharactersPosition(UserTerminal userTerminal, Entry<Position, KeyStroke> entry) {
-				Position newPosition;
-				if(entry.getKey().getX() == userTerminal.getColumnsNumber()-1){
-					newPosition = new Position(0, entry.getKey().getY() + 1);
-				}else{
-				    newPosition = new Position(entry.getKey().getX() + 1, entry.getKey().getY());
-				}
-				return newPosition;
+//				Position newPosition;
+//				if(entry.getKey().getX() == userTerminal.getColumnsNumber()-1){
+//					newPosition = new Position(0, entry.getKey().getY() + 1);
+//				}else{
+//				    newPosition = new Position(entry.getKey().getX() + 1, entry.getKey().getY());
+//				}
+				return getFollowingPosition(entry.getKey());
 			}
 
 			@Override
 			protected SortedMap<Position, KeyStroke> getToShiftPart(UserTerminal userTerminal) {
-				return userTerminal.getCurrentCommand().getPositionKeyMap().tailMap(getKeyToHandlePosition(userTerminal));
+				System.out.println(getCaretPosition(userTerminal));
+				return userTerminal.getCurrentCommand().getPositionKeyMap().tailMap(new Position(getCaretPosition(userTerminal).getX()-1, getCaretPosition(userTerminal).getY()), true);
 			}
 
 			@Override
 			protected SortedMap<Position, KeyStroke> getNotShiftedPart(UserTerminal userTerminal) {
-				return userTerminal.getCurrentCommand().getPositionKeyMap().headMap(getKeyToHandlePosition(userTerminal));
+				System.out.println(getCaretPosition(userTerminal));
+				return userTerminal.getCurrentCommand().getPositionKeyMap().headMap(new Position(getCaretPosition(userTerminal).getX()-1, getCaretPosition(userTerminal).getY()), false);
 			}
 		};
 		
-		commandHandler.handleCommand(keyToHandle);
+		commandHandler.handleCommand(keyToHandle, true);
 	}
 	
 	

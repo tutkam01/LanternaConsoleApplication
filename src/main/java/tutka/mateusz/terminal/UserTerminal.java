@@ -16,10 +16,12 @@ import tutka.mateusz.interfaces.KeyHandler;
 import tutka.mateusz.keys.ArrowLeftKeyHandler;
 import tutka.mateusz.keys.ArrowRightKeyHandler;
 import tutka.mateusz.keys.CharacterKeyHandler;
+import tutka.mateusz.keys.DeleteKeyHandler;
 import tutka.mateusz.keys.EnterKeyHandler;
 import tutka.mateusz.keys.EscapeKeyHandler;
 import tutka.mateusz.models.Caret;
 import tutka.mateusz.models.Command;
+import tutka.mateusz.models.Position;
 import tutka.mateusz.models.Word;
 
 import com.googlecode.lanterna.SGR;
@@ -64,6 +66,7 @@ public class UserTerminal extends JFrame implements ResizeListener{
     	keys.put(KeyType.ArrowRight, new ArrowRightKeyHandler());
     	keys.put(KeyType.Escape, new EscapeKeyHandler());
     	keys.put(KeyType.Character, new CharacterKeyHandler(keyWords));
+    	keys.put(KeyType.Delete, new DeleteKeyHandler());
     	
         initComponents();
         SwingTerminalDeviceConfiguration deviceConfig =  new SwingTerminalDeviceConfiguration(2000, 500, CursorStyle.REVERSED, new TextColor.RGB(255, 255, 255), true).withLineBufferScrollbackSize(150);
@@ -283,7 +286,6 @@ public class UserTerminal extends JFrame implements ResizeListener{
 	public boolean isCurrentCursorPositionInTheMiddleOfCommand() {
 		return caret.getPosition().compareTo(currentCommand.getPositionKeyMap().lastKey())<=0;
 	}
-	
 	
     
     public void startUserTerminal() {

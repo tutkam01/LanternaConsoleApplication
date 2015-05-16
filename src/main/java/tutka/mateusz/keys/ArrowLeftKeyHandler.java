@@ -8,7 +8,9 @@ import tutka.mateusz.terminal.UserTerminal;
 public class ArrowLeftKeyHandler implements KeyHandler {
 
 	public void handleKey(KeyStroke keyToHandle, UserTerminal userTerminal) {
-		if(userTerminal.getCaret().getX() == 0){
+		if(userTerminal.getCaret().getX() == 0 && userTerminal.getCaret().getY() == 0) return;
+		
+		if(userTerminal.getCaret().getX() == 0 && userTerminal.getCaret().getY()!=0){
 			int[] carretPosition = new int[]{userTerminal.getColumnsNumber()-1, userTerminal.getCaret().getY() - 1};
 			userTerminal.getCaret().setX(carretPosition[0]);
 			userTerminal.getCaret().setY(carretPosition[1]);
