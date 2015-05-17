@@ -57,4 +57,20 @@ public class Caret {
 		this.absolute_y = absolute_y;
 	}
 	
+	public Position getPrecedingPosition(int columnsNumber){
+		if(x == 0 && y > 0){
+			return new Position(columnsNumber - 1, y - 1);
+		}
+			
+		return new Position(x - 1, y);
+	}
+	
+	public Position getFollowingPosition(int columnsNumber){
+		if(x ==columnsNumber - 1){
+			return new Position(0, y + 1);
+		}
+			
+		return new Position(x + 1, y);
+	}
+	
 }

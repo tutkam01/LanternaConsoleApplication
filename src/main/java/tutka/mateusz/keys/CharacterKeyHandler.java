@@ -43,13 +43,13 @@ public class CharacterKeyHandler implements KeyHandler {
 			@Override
 			protected SortedMap<Position, KeyStroke> getToShiftPart(UserTerminal userTerminal) {
 				System.out.println(getCaretPosition(userTerminal));
-				return userTerminal.getCurrentCommand().getPositionKeyMap().tailMap(new Position(getCaretPosition(userTerminal).getX()-1, getCaretPosition(userTerminal).getY()), true);
+				return userTerminal.getCurrentCommand().getPositionKeyMap().tailMap(getPrecedingPosition(getCaretPosition(userTerminal)), true);
 			}
 
 			@Override
 			protected SortedMap<Position, KeyStroke> getNotShiftedPart(UserTerminal userTerminal) {
 				System.out.println(getCaretPosition(userTerminal));
-				return userTerminal.getCurrentCommand().getPositionKeyMap().headMap(new Position(getCaretPosition(userTerminal).getX()-1, getCaretPosition(userTerminal).getY()), false);
+				return userTerminal.getCurrentCommand().getPositionKeyMap().headMap(getPrecedingPosition(getCaretPosition(userTerminal)), false);
 			}
 		};
 		

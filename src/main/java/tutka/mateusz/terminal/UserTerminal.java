@@ -142,7 +142,7 @@ public class UserTerminal extends JFrame implements ResizeListener{
     public void putString(String stringToSend){
     	List<Character> characters = returnCharacters(changeStyle(stringToSend));
     	try{
-    		scrollingSwingTerminal.setCursorPosition(this.word.getStartCaretPosition(), this.caret.getY());
+    		scrollingSwingTerminal.setCursorPosition(word.getStartCaretPosition(), caret.getY());
     	}catch(IndexOutOfBoundsException e){
     		scrollingSwingTerminal.clearScreen();
     		scrollingSwingTerminal.setCursorPosition(0, 0);
@@ -153,14 +153,36 @@ public class UserTerminal extends JFrame implements ResizeListener{
     		
     	}
     	scrollingSwingTerminal.enableSGR(SGR.BOLD);
+    	
+    	Position position = new Position(word.getStartCaretPosition(), caret.getY());
 		for(Character character: characters){
 			scrollingSwingTerminal.putCharacter(character);
+			
+			getCurrentCommand().getPositionKeyMap().put(position, new KeyStroke(character, false, false));
+			position = getFollowingPosition(position);
 		}
 		scrollingSwingTerminal.disableSGR(SGR.BOLD);
 		scrollingSwingTerminal.putCharacter(' ');
     	
     	
     }
+    
+    public Position getPrecedingPosition(Position referencePosition){
+		if(referencePosition.getX() == 0 && referencePosition.getY() > 0){
+			return new Position(getColumnsNumber() - 1, referencePosition.getY() - 1);
+		}
+			
+		return new Position(referencePosition.getX() - 1, referencePosition.getY());
+		
+	}
+    
+    public Position getFollowingPosition(Position referencePosition){
+		if(referencePosition.getX() == getColumnsNumber()-1){
+			return new Position(0, referencePosition.getY() + 1);
+		}
+			
+		return new Position(referencePosition.getX() + 1, referencePosition.getY());
+	}
     
 	public void sendCharacterToConsole(KeyStroke currentKey) {
 		scrollingSwingTerminal.putCharacter(currentKey.getCharacter());
@@ -287,7 +309,9 @@ public class UserTerminal extends JFrame implements ResizeListener{
 		return caret.getPosition().compareTo(currentCommand.getPositionKeyMap().lastKey())<=0;
 	}
 	
-    
+    public Position getCaretPosition(){
+    	return new Position(getCaret().getX(), getCaret().getY());
+    }
     public void startUserTerminal() {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());

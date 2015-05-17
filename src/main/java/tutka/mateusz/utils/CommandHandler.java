@@ -58,23 +58,15 @@ public abstract class CommandHandler {
 	}
 
 	public Position getCaretPosition(UserTerminal userTerminal) {
-		return new Position(userTerminal.getCaret().getX(), userTerminal.getCaret().getY());
+		return userTerminal.getCaretPosition();
 	}
 	
 	public Position getPrecedingPosition(Position referencePosition){
-		if(referencePosition.getX() == 0 && referencePosition.getY() > 0){
-			return new Position(userTerminal.getColumnsNumber() - 1, referencePosition.getY() - 1);
-		}
-			
-		return new Position(referencePosition.getX() - 1, referencePosition.getY());
+		return userTerminal.getPrecedingPosition(referencePosition);
 	}
 	
 	public Position getFollowingPosition(Position referencePosition){
-		if(referencePosition.getX() == userTerminal.getColumnsNumber()-1){
-			return new Position(0, referencePosition.getY() + 1);
-		}
-			
-		return new Position(referencePosition.getX() + 1, referencePosition.getY());
+		return userTerminal.getFollowingPosition(referencePosition);
 	}
 
 	private void shiftToShiftPart(UserTerminal userTerminal,TreeMap<Position, KeyStroke> afterShift, SortedMap<Position, KeyStroke> toShiftPart) {
