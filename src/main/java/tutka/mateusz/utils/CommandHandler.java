@@ -6,6 +6,7 @@ import java.util.TreeMap;
 
 import com.googlecode.lanterna.input.KeyStroke;
 
+import tutka.mateusz.keys.KeyToHandle;
 import tutka.mateusz.models.Position;
 import tutka.mateusz.terminal.UserTerminal;
 
@@ -73,8 +74,25 @@ public abstract class CommandHandler {
 		for(Map.Entry<Position, KeyStroke> entry: toShiftPart.entrySet()){
 			Position newPosition = calculateNewCharactersPosition(userTerminal, entry);
 			afterShift.put(newPosition, entry.getValue());
+			sendCharatcerBackToConsole(userTerminal, entry);
+		}
+		
+		
+	}
+
+	private void sendCharatcerBackToConsole(UserTerminal userTerminal, 	Map.Entry<Position, KeyStroke> entry) {
+		if(entry.getValue() instanceof KeyToHandle){
+			highlightCharacter(userTerminal, entry);
+		}else{
 			userTerminal.getTerminal().putCharacter(entry.getValue().getCharacter());
 		}
+	}
+
+	private void highlightCharacter(UserTerminal userTerminal, Map.Entry<Position, KeyStroke> entry) {
+		KeyToHandle specialKey = (KeyToHandle)entry.getValue();
+		userTerminal.getTerminal().enableSGR(specialKey.getLayout());
+		userTerminal.getTerminal().putCharacter(entry.getValue().getCharacter());
+		userTerminal.getTerminal().disableSGR(specialKey.getLayout());
 	}
 	
 		
