@@ -31,12 +31,6 @@ public class CharacterKeyHandler implements KeyHandler {
 
 			@Override
 			protected Position calculateNewCharactersPosition(UserTerminal userTerminal, Entry<Position, KeyStroke> entry) {
-//				Position newPosition;
-//				if(entry.getKey().getX() == userTerminal.getColumnsNumber()-1){
-//					newPosition = new Position(0, entry.getKey().getY() + 1);
-//				}else{
-//				    newPosition = new Position(entry.getKey().getX() + 1, entry.getKey().getY());
-//				}
 				return getFollowingPosition(entry.getKey());
 			}
 

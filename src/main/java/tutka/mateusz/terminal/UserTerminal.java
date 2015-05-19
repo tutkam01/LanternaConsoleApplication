@@ -19,7 +19,7 @@ import tutka.mateusz.keys.CharacterKeyHandler;
 import tutka.mateusz.keys.DeleteKeyHandler;
 import tutka.mateusz.keys.EnterKeyHandler;
 import tutka.mateusz.keys.EscapeKeyHandler;
-import tutka.mateusz.keys.KeyToHandle;
+import tutka.mateusz.keys.HighlightedKey;
 import tutka.mateusz.models.Caret;
 import tutka.mateusz.models.Command;
 import tutka.mateusz.models.Position;
@@ -159,7 +159,7 @@ public class UserTerminal extends JFrame implements ResizeListener{
 		for(Character character: characters){
 			scrollingSwingTerminal.putCharacter(character);
 			
-			getCurrentCommand().getPositionKeyMap().put(position, new KeyToHandle(character, SGR.BOLD, false, false));
+			getCurrentCommand().getPositionKeyMap().put(position, new HighlightedKey(character, SGR.BOLD, false, false));
 			position = getFollowingPosition(position);
 		}
 		scrollingSwingTerminal.disableSGR(SGR.BOLD);

@@ -3,10 +3,10 @@ package tutka.mateusz.keys;
 import com.googlecode.lanterna.SGR;
 import com.googlecode.lanterna.input.KeyStroke;
 
-public class KeyToHandle extends KeyStroke{
+public class HighlightedKey extends KeyStroke{
 	private SGR layout;
 	
-	public KeyToHandle(Character character, SGR layout, boolean ctrlDown, boolean altDown) {
+	public HighlightedKey(Character character, SGR layout, boolean ctrlDown, boolean altDown) {
 		super(character, ctrlDown, altDown);
 		this.layout = layout;
 	}

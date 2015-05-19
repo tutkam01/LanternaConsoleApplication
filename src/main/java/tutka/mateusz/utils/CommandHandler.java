@@ -6,7 +6,7 @@ import java.util.TreeMap;
 
 import com.googlecode.lanterna.input.KeyStroke;
 
-import tutka.mateusz.keys.KeyToHandle;
+import tutka.mateusz.keys.HighlightedKey;
 import tutka.mateusz.models.Position;
 import tutka.mateusz.terminal.UserTerminal;
 
@@ -81,7 +81,7 @@ public abstract class CommandHandler {
 	}
 
 	private void sendCharatcerBackToConsole(UserTerminal userTerminal, 	Map.Entry<Position, KeyStroke> entry) {
-		if(entry.getValue() instanceof KeyToHandle){
+		if(entry.getValue() instanceof HighlightedKey){
 			highlightCharacter(userTerminal, entry);
 		}else{
 			userTerminal.getTerminal().putCharacter(entry.getValue().getCharacter());
@@ -89,10 +89,12 @@ public abstract class CommandHandler {
 	}
 
 	private void highlightCharacter(UserTerminal userTerminal, Map.Entry<Position, KeyStroke> entry) {
-		KeyToHandle specialKey = (KeyToHandle)entry.getValue();
-		userTerminal.getTerminal().enableSGR(specialKey.getLayout());
-		userTerminal.getTerminal().putCharacter(entry.getValue().getCharacter());
-		userTerminal.getTerminal().disableSGR(specialKey.getLayout());
+		HighlightedKey specialKey = (HighlightedKey)entry.getValue();
+		if(specialKey.getLayout() != null){
+			userTerminal.getTerminal().enableSGR(specialKey.getLayout());
+			userTerminal.getTerminal().putCharacter(entry.getValue().getCharacter());
+			userTerminal.getTerminal().disableSGR(specialKey.getLayout());
+		}
 	}
 	
 		

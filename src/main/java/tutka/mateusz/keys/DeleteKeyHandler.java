@@ -18,15 +18,7 @@ public class DeleteKeyHandler implements KeyHandler {
 
 			@Override
 			protected Position calculateNewCharactersPosition(UserTerminal userTerminal, Entry<Position, KeyStroke> entry) {
-//				Position newPosition;
-				
-//				if(entry.getKey().getX() == 0 && entry.getKey().getY() > 0){
-//					newPosition = new Position(userTerminal.getColumnsNumber()-1, entry.getKey().getY() - 1);
-//				}else{
-//				    newPosition = new Position(entry.getKey().getX() - 1, entry.getKey().getY());
-//				}
 				return getPrecedingPosition(entry.getKey());
-				
 			}
 
 			private void eraseDeletedCharacterFromScreen(UserTerminal userTerminal) {
