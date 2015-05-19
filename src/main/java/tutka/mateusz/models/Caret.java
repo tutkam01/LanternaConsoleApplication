@@ -25,6 +25,10 @@ public class Caret {
 		return new Position(x, y);
 	}
 	
+	public Position getAbsolutePosition(){
+		return new Position(absolute_x, absolute_y);
+	}
+	
 	public int getX() {
 		return x;
 	}

@@ -307,11 +307,12 @@ public class UserTerminal extends JFrame implements ResizeListener{
 	}
 	
 	public boolean isCurrentCursorPositionInTheMiddleOfCommand() {
-		return caret.getPosition().compareTo(currentCommand.getPositionKeyMap().lastKey())<=0;
+		return getPrecedingPosition(caret.getAbsolutePosition()).compareTo(currentCommand.getPositionKeyMap().lastKey())<=0;
 	}
 	
     public Position getCaretPosition(){
-    	return new Position(getCaret().getX(), getCaret().getY());
+//    	return new Position(getCaret().getX(), getCaret().getY());
+    	return caret.getAbsolutePosition();
     }
     public void startUserTerminal() {
         try {

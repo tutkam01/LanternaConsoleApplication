@@ -26,9 +26,7 @@ public abstract class CommandHandler {
 			TreeMap<Position, KeyStroke> commandAfterShift = getCommandAfterShift(userTerminal, keyToHandle, addCurrentKeyToShiftedPart);
 			userTerminal.getCurrentCommand().getPositionKeyMap().clear();
 			userTerminal.getCurrentCommand().getPositionKeyMap().putAll(commandAfterShift);
-			
 		}else{
-//			Position position =  new Position(getKeyToHandlePosition(userTerminal).getX() - 1, getKeyToHandlePosition(userTerminal).getY());
 			addCurrentCharacterToCommand(userTerminal, keyToHandle, getPrecedingPosition(getCaretPosition(userTerminal)));
 		}
 	}
