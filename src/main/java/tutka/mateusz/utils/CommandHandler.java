@@ -27,7 +27,7 @@ public abstract class CommandHandler {
 			userTerminal.getCurrentCommand().getPositionKeyMap().clear();
 			userTerminal.getCurrentCommand().getPositionKeyMap().putAll(commandAfterShift);
 		}else{
-			addCurrentCharacterToCommand(userTerminal, keyToHandle, getPrecedingPosition(getCaretPosition(userTerminal)));
+			addCurrentCharacterToCommand(userTerminal, keyToHandle, getPrecedingPosition(userTerminal.getCaret().getAbsolutePosition()));
 		}
 	}
    
@@ -44,7 +44,7 @@ public abstract class CommandHandler {
 		afterShift.putAll(notShiftedPart);			
 		addCurrentKeyToShifedPart(afterShift, keyToHandle, addCurrentKeyToShiftedPart);
 		shiftToShiftPart(userTerminal, afterShift, toShiftPart);
-		setCursorToCurrentPosition(userTerminal);
+//		setCursorToCurrentPosition(userTerminal);
 		return afterShift;
 	}
 
@@ -53,7 +53,7 @@ public abstract class CommandHandler {
 	}
 
 	private void setCursorToCurrentPosition(UserTerminal userTerminal) {
-		userTerminal.getTerminal().setCursorPosition(userTerminal.getCaret().getX(), userTerminal.getCaret().getY());
+		userTerminal.getTerminal().setCursorPosition(userTerminal.getCaret().getX(), (userTerminal.getCaret().getY()<userTerminal.getRowsNumber()-1)?userTerminal.getCaret().getY(): userTerminal.getRowsNumber()-1);
 	}
 
 	public Position getCaretPosition(UserTerminal userTerminal) {
@@ -69,11 +69,24 @@ public abstract class CommandHandler {
 	}
 
 	private void shiftToShiftPart(UserTerminal userTerminal,TreeMap<Position, KeyStroke> afterShift, SortedMap<Position, KeyStroke> toShiftPart) {
+		int[] initialCaretPosition = new int[]{userTerminal.getCaret().getX(), userTerminal.getCaret().getY()};
+		int[] absoluteInitialCaretPosition = new int[]{userTerminal.getCaret().getAbsolute_x(), userTerminal.getCaret().getAbsolute_y()};
 		for(Map.Entry<Position, KeyStroke> entry: toShiftPart.entrySet()){
 			Position newPosition = calculateNewCharactersPosition(userTerminal, entry);
 			afterShift.put(newPosition, entry.getValue());
 			sendCharatcerBackToConsole(userTerminal, entry);
+			userTerminal.shiftCaret();
 		}
+		
+		int verticalOffset = 1;
+		if(userTerminal.getCaret().getAbsolute_y()>absoluteInitialCaretPosition[1]){
+			verticalOffset = 2;
+		}
+		userTerminal.getCaret().setX(initialCaretPosition[0]);
+		userTerminal.getCaret().setY(initialCaretPosition[1]);
+		userTerminal.getCaret().setAbsolute_x(absoluteInitialCaretPosition[0]);
+		userTerminal.getCaret().setAbsolute_y(absoluteInitialCaretPosition[1]);
+		userTerminal.getTerminal().setCursorPosition(userTerminal.getCaret().getX(), (userTerminal.getCaret().getY()<userTerminal.getRowsNumber()-1)?userTerminal.getCaret().getY(): userTerminal.getRowsNumber()-verticalOffset);
 		
 		
 	}
@@ -82,6 +95,7 @@ public abstract class CommandHandler {
 		if(entry.getValue() instanceof HighlightedKey){
 			highlightCharacter(userTerminal, entry);
 		}else{
+			// sprobuj uaktualnic absolutna pozycje
 			userTerminal.getTerminal().putCharacter(entry.getValue().getCharacter());
 		}
 	}

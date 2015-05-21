@@ -10,9 +10,11 @@ import tutka.mateusz.models.Position;
 import tutka.mateusz.terminal.UserTerminal;
 import tutka.mateusz.utils.CommandHandler;
 
-public class DeleteKeyHandler implements KeyHandler {
+public class BackspaceKeyHandler implements KeyHandler {
 
 	public void handleKey(KeyStroke keyToHandle, UserTerminal userTerminal) {
+		ArrowLeftKeyHandler justLikeLeftArrow = new ArrowLeftKeyHandler();
+		justLikeLeftArrow.handleKey(null, userTerminal);
 		
 		CommandHandler commandHandler = new CommandHandler(userTerminal) {
 
@@ -22,7 +24,7 @@ public class DeleteKeyHandler implements KeyHandler {
 			}
 
 			private void eraseDeletedCharacterFromScreen(UserTerminal userTerminal) {
-				Position currentPosition = userTerminal.getCaret().getPosition();
+				Position currentPosition = userTerminal.getCaret().getAbsolutePosition();
 				Position characterToErasePosition = userTerminal.getCurrentCommand().getPositionKeyMap().lastKey();
 				userTerminal.getTerminal().setCursorPosition(characterToErasePosition.getX(), (userTerminal.getCaret().getY()<userTerminal.getRowsNumber()-1)?userTerminal.getCaret().getY(): userTerminal.getRowsNumber()-1);
 				userTerminal.getTerminal().putCharacter(' ');
