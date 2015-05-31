@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Logger;
 
@@ -15,6 +16,7 @@ import javax.swing.UIManager;
 import tutka.mateusz.interfaces.KeyHandler;
 import tutka.mateusz.keys.ArrowLeftKeyHandler;
 import tutka.mateusz.keys.ArrowRightKeyHandler;
+import tutka.mateusz.keys.ArrowUpKeyHandler;
 import tutka.mateusz.keys.BackspaceKeyHandler;
 import tutka.mateusz.keys.CharacterKeyHandler;
 import tutka.mateusz.keys.DeleteKeyHandler;
@@ -70,14 +72,16 @@ public class UserTerminal extends JFrame implements ResizeListener{
     	keys.put(KeyType.Character, new CharacterKeyHandler(keyWords));
     	keys.put(KeyType.Delete, new DeleteKeyHandler());
     	keys.put(KeyType.Backspace, new BackspaceKeyHandler());
+    	keys.put(KeyType.ArrowUp, new ArrowUpKeyHandler());
     	
         initComponents();
-        SwingTerminalDeviceConfiguration deviceConfig =  new SwingTerminalDeviceConfiguration(2000, 500, CursorStyle.REVERSED, new TextColor.RGB(255, 255, 255), true).withLineBufferScrollbackSize(150);
+        SwingTerminalDeviceConfiguration deviceConfig =  new SwingTerminalDeviceConfiguration(2000, 500, CursorStyle.UNDER_BAR, new TextColor.RGB(192, 192, 192), true).withLineBufferScrollbackSize(150);
         
         scrollingSwingTerminal = new ScrollingSwingTerminal(
         		deviceConfig,
                 SwingTerminalFontConfiguration.DEFAULT,
                 SwingTerminalColorConfiguration.DEFAULT);
+        scrollingSwingTerminal.setForegroundColor(TextColor.ANSI.RED);
         panelTerminalContainer.add(scrollingSwingTerminal, BorderLayout.CENTER);
         scrollingSwingTerminal.addResizeListener(this);
         pack();
@@ -89,6 +93,10 @@ public class UserTerminal extends JFrame implements ResizeListener{
 
 	public Command getCurrentCommand() {
 		return currentCommand;
+	}
+	
+	public void setCurrentCommand(Command command){
+		this.currentCommand = command;
 	}
 
 	private void initComponents() {
@@ -221,6 +229,31 @@ public class UserTerminal extends JFrame implements ResizeListener{
 		}
 		
 		getWord().resetWord();
+	}
+	
+	public void sendCommandToConsole(Command command){
+		
+		scrollingSwingTerminal.setCursorPosition(getCurrentCommand().getCommandStartPosition().getX(), getCurrentCommand().getCommandStartPosition().getY());
+		
+		for(Entry<Position, KeyStroke> entry: command.getPositionKeyMap().entrySet()){
+			if(entry.getValue() instanceof HighlightedKey){
+				scrollingSwingTerminal.enableSGR(SGR.BOLD);
+				scrollingSwingTerminal.putCharacter(entry.getValue().getCharacter());
+				scrollingSwingTerminal.disableSGR(SGR.BOLD);
+			}else{
+				scrollingSwingTerminal.putCharacter(entry.getValue().getCharacter());
+			}
+		}
+		
+		if(!currentCommand.getPositionKeyMap().isEmpty() && command.getPositionKeyMap().size()<(currentCommand.getPositionKeyMap().size())){
+			int numberOfCharactersToErase = currentCommand.getPositionKeyMap().size() - command.getPositionKeyMap().size();
+			
+			for(int i=0; i<numberOfCharactersToErase; i++){
+				scrollingSwingTerminal.putCharacter(' ');
+			}
+			
+		}
+		
 	}
 	
 	private List<String> getSubKeyWords(String keyWord) {

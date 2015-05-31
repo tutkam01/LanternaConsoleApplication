@@ -27,6 +27,7 @@ public class CharacterKeyHandler implements KeyHandler {
 			userTerminal.getWord().addKey(keyToHandle);						
 		}
 		
+		ArrowUpKeyHandler.resetCounter();
 		CommandHandler commandHandler = new CommandHandler(userTerminal) {
 
 			@Override
