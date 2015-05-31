@@ -77,13 +77,13 @@ public class UserTerminal extends JFrame implements ResizeListener{
     	keys.put(KeyType.ArrowDown, new ArrowDownKeyHandler());
     	
         initComponents();
-        SwingTerminalDeviceConfiguration deviceConfig =  new SwingTerminalDeviceConfiguration(2000, 500, CursorStyle.UNDER_BAR, new TextColor.RGB(192, 192, 192), true).withLineBufferScrollbackSize(150);
+        SwingTerminalDeviceConfiguration deviceConfig =  new SwingTerminalDeviceConfiguration(2000, 500, CursorStyle.UNDER_BAR, new TextColor.RGB(255, 0, 0), true).withLineBufferScrollbackSize(150);
         
         scrollingSwingTerminal = new ScrollingSwingTerminal(
         		deviceConfig,
                 SwingTerminalFontConfiguration.DEFAULT,
                 SwingTerminalColorConfiguration.DEFAULT);
-        scrollingSwingTerminal.setForegroundColor(TextColor.ANSI.RED);
+        scrollingSwingTerminal.setForegroundColor(new TextColor.RGB(255, 0, 0));
         panelTerminalContainer.add(scrollingSwingTerminal, BorderLayout.CENTER);
         scrollingSwingTerminal.addResizeListener(this);
         pack();
@@ -352,9 +352,10 @@ public class UserTerminal extends JFrame implements ResizeListener{
 	}
 	
     public Position getCaretPosition(){
-//    	return new Position(getCaret().getX(), getCaret().getY());
     	return caret.getAbsolutePosition();
     }
+    
+    
     public void startUserTerminal() {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());

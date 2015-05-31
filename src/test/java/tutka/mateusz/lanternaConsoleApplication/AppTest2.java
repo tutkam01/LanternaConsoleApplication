@@ -11,6 +11,7 @@ public class AppTest2 {
     	application.getCommandToMethodMap().put("command", null);
     	application.getCommandToMethodMap().put("set", null);
     	application.getCommandToMethodMap().put("as child of", null);
+    	application.getCommandToMethodMap().put("nowa dluga komenda", null);
 		 
     	application.run();
 	}
