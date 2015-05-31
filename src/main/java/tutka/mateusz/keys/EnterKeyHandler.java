@@ -1,14 +1,11 @@
 package tutka.mateusz.keys;
 
-import java.util.Map;
-import java.util.TreeMap;
-
-import com.googlecode.lanterna.input.KeyStroke;
-
 import tutka.mateusz.interfaces.KeyHandler;
 import tutka.mateusz.models.Command;
 import tutka.mateusz.models.Position;
 import tutka.mateusz.terminal.UserTerminal;
+
+import com.googlecode.lanterna.input.KeyStroke;
 
 public class EnterKeyHandler implements KeyHandler {
 
@@ -26,10 +23,13 @@ public class EnterKeyHandler implements KeyHandler {
 		
 		
 		if(!userTerminal.getCurrentCommand().getPositionKeyMap().isEmpty()) userTerminal.getCommandsHistory().add(new Command(userTerminal.getCurrentCommand()));
-		ArrowUpKeyHandler.resetCounter();
+		
+		ArrowUpDownKeyHandler.resetCounter();
 		ArrowUpKeyHandler.resetVerticalShiftOfStartPoint();
 		ArrowUpKeyHandler.resetCurrentCommandLinesNumber();
-//		System.out.println(userTerminal.getCurrentCommand().getPositionKeyMap());
+		ArrowDownKeyHandler.resetVerticalShiftOfStartPoint();
+		ArrowDownKeyHandler.resetCurrentCommandLinesNumber();
+		
 		userTerminal.getCurrentCommand().getPositionKeyMap().clear();
 		
 		userTerminal.getCurrentCommand().setCommandStartPosition(new Position(carretPosition[0], carretPosition[1]));

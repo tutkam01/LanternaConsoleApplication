@@ -2,27 +2,30 @@ package tutka.mateusz.keys;
 
 import java.util.Map.Entry;
 
+import com.googlecode.lanterna.input.KeyStroke;
+
 import tutka.mateusz.interfaces.KeyHandler;
 import tutka.mateusz.models.Command;
 import tutka.mateusz.models.Position;
 import tutka.mateusz.terminal.UserTerminal;
 
-import com.googlecode.lanterna.input.KeyStroke;
+public class ArrowDownKeyHandler extends ArrowUpDownKeyHandler implements KeyHandler {
 
-public class ArrowUpKeyHandler extends ArrowUpDownKeyHandler implements KeyHandler {
 	
-	public static int currentCommandLines = 0;
+	
+	private static int currentCommandLines = 0;
 	
 	public void handleKey(KeyStroke keyToHandle, UserTerminal userTerminal) {
 		if(userTerminal.getCommandsHistory().isEmpty()) return;
-		counter++;
-		if(counter > userTerminal.getCommandsHistory().size()){
-			counter = 1;
-		}
+		counter--;
 		if(counter <= 0){
 			counter = userTerminal.getCommandsHistory().size();
 		}
-		System.out.println("Up " + counter );
+		
+		if(counter > userTerminal.getCommandsHistory().size()){
+			counter = 1;
+		}
+		System.out.println("Down " + counter );
 		Command commandHistory = userTerminal.getCommandsHistory().get(userTerminal.getCommandsHistory().size() - counter);
 		
 		int historyCommandLines = 0;
@@ -75,7 +78,6 @@ public class ArrowUpKeyHandler extends ArrowUpDownKeyHandler implements KeyHandl
 		userTerminal.getTerminal().setCursorPosition(userTerminal.getCaret().getX(), userTerminal.getCaret().getY());
 		System.out.println(userTerminal.getCurrentCommand().getPositionKeyMap());
 	}
-	
 	
 	public static void resetVerticalShiftOfStartPoint(){
 		verticalShifOfStartPoint = 0;

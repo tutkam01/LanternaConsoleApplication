@@ -14,6 +14,7 @@ import javax.swing.JFrame;
 import javax.swing.UIManager;
 
 import tutka.mateusz.interfaces.KeyHandler;
+import tutka.mateusz.keys.ArrowDownKeyHandler;
 import tutka.mateusz.keys.ArrowLeftKeyHandler;
 import tutka.mateusz.keys.ArrowRightKeyHandler;
 import tutka.mateusz.keys.ArrowUpKeyHandler;
@@ -73,6 +74,7 @@ public class UserTerminal extends JFrame implements ResizeListener{
     	keys.put(KeyType.Delete, new DeleteKeyHandler());
     	keys.put(KeyType.Backspace, new BackspaceKeyHandler());
     	keys.put(KeyType.ArrowUp, new ArrowUpKeyHandler());
+    	keys.put(KeyType.ArrowDown, new ArrowDownKeyHandler());
     	
         initComponents();
         SwingTerminalDeviceConfiguration deviceConfig =  new SwingTerminalDeviceConfiguration(2000, 500, CursorStyle.UNDER_BAR, new TextColor.RGB(192, 192, 192), true).withLineBufferScrollbackSize(150);
@@ -318,9 +320,13 @@ public class UserTerminal extends JFrame implements ResizeListener{
 	public void onResized(Terminal terminal, TerminalSize newSize) {
 		try{
 			scrollingSwingTerminal.setCursorPosition(caret.getAbsolute_x(), caret.getAbsolute_y());
+			getCurrentCommand().getCommandStartPosition().setX(0);
+			getCurrentCommand().getCommandStartPosition().setY(caret.getAbsolute_y());
+			getCommandsHistory().clear();
 		}catch(IndexOutOfBoundsException e){
 			//terminal shrinked hiding cursor
 			caret.setY(getRowsNumber()-1);
+			getCurrentCommand().getCommandStartPosition().setY(getRowsNumber()-1);
 		}
 		caret.setY(caret.getAbsolute_y());
 	}
