@@ -1,6 +1,7 @@
 package tutka.mateusz.terminal;
 
 import java.awt.BorderLayout;
+import java.awt.Font;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.logging.Logger;
 
 import javax.swing.JFrame;
 import javax.swing.UIManager;
@@ -23,15 +23,18 @@ import tutka.mateusz.keys.CharacterKeyHandler;
 import tutka.mateusz.keys.DeleteKeyHandler;
 import tutka.mateusz.keys.EnterKeyHandler;
 import tutka.mateusz.keys.EscapeKeyHandler;
+import tutka.mateusz.keys.F2KeyHandler;
 import tutka.mateusz.keys.HighlightedKey;
 import tutka.mateusz.models.Caret;
 import tutka.mateusz.models.Command;
 import tutka.mateusz.models.Position;
 import tutka.mateusz.models.Word;
+import tutka.mateusz.models.terminalconfig.TerminalConfiguration;
 
 import com.googlecode.lanterna.SGR;
 import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.TextColor;
+import com.googlecode.lanterna.TextColor.RGB;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 import com.googlecode.lanterna.terminal.ResizeListener;
@@ -39,8 +42,8 @@ import com.googlecode.lanterna.terminal.Terminal;
 import com.googlecode.lanterna.terminal.swing.ScrollingSwingTerminal;
 import com.googlecode.lanterna.terminal.swing.SwingTerminalColorConfiguration;
 import com.googlecode.lanterna.terminal.swing.SwingTerminalDeviceConfiguration;
-import com.googlecode.lanterna.terminal.swing.SwingTerminalFontConfiguration;
 import com.googlecode.lanterna.terminal.swing.SwingTerminalDeviceConfiguration.CursorStyle;
+import com.googlecode.lanterna.terminal.swing.SwingTerminalFontConfiguration;
 
 @SuppressWarnings("serial")
 public class UserTerminal extends JFrame implements ResizeListener{
@@ -52,6 +55,7 @@ public class UserTerminal extends JFrame implements ResizeListener{
     private Set<String> keyWords;
     private ArrayList<Command> commandsHistory;
     private Command currentCommand;
+    private TerminalConfiguration terminalConfiguration;
     
     
 
@@ -75,19 +79,34 @@ public class UserTerminal extends JFrame implements ResizeListener{
     	keys.put(KeyType.Backspace, new BackspaceKeyHandler());
     	keys.put(KeyType.ArrowUp, new ArrowUpKeyHandler());
     	keys.put(KeyType.ArrowDown, new ArrowDownKeyHandler());
+    	keys.put(KeyType.F2, new F2KeyHandler());
     	
         initComponents();
-        SwingTerminalDeviceConfiguration deviceConfig =  new SwingTerminalDeviceConfiguration(2000, 500, CursorStyle.UNDER_BAR, new TextColor.RGB(255, 0, 0), true).withLineBufferScrollbackSize(150);
+        terminalConfiguration = TerminalConfiguration.deserializeConfiguration();
+//        terminalConfiguration.getFontColor().setR(192);
+//        TerminalConfiguration.serializeConfiguration(terminalConfiguration);
+        SwingTerminalDeviceConfiguration deviceConfig =  new SwingTerminalDeviceConfiguration(2000, 500, CursorStyle.UNDER_BAR, getFontColorRGBschema(), true).withLineBufferScrollbackSize(150);
         
         scrollingSwingTerminal = new ScrollingSwingTerminal(
         		deviceConfig,
-                SwingTerminalFontConfiguration.DEFAULT,
+                SwingTerminalFontConfiguration.newInstance(new Font("Monospaced", terminalConfiguration.getFontStyle().getStyle(), terminalConfiguration.getFontSize())),
                 SwingTerminalColorConfiguration.DEFAULT);
-        scrollingSwingTerminal.setForegroundColor(new TextColor.RGB(255, 0, 0));
+        scrollingSwingTerminal.setForegroundColor(getFontColorRGBschema());
         panelTerminalContainer.add(scrollingSwingTerminal, BorderLayout.CENTER);
         scrollingSwingTerminal.addResizeListener(this);
         pack();
     }
+
+	private RGB getFontColorRGBschema() {
+		return new TextColor.RGB(terminalConfiguration.getFontColor().getR(), terminalConfiguration.getFontColor().getG(), terminalConfiguration.getFontColor().getB());
+	}
+	private RGB getKeyWordsColorRGBschema() {
+		return new TextColor.RGB(terminalConfiguration.getKeyWordsColor().getR(), terminalConfiguration.getKeyWordsColor().getG(), terminalConfiguration.getKeyWordsColor().getB());
+	}
+	
+	public TerminalConfiguration getTerminalConfiguration(){
+		return this.terminalConfiguration;
+	}
     
     public ArrayList<Command> getCommandsHistory() {
 		return commandsHistory;
@@ -166,6 +185,7 @@ public class UserTerminal extends JFrame implements ResizeListener{
     		
     	}
     	scrollingSwingTerminal.enableSGR(SGR.BOLD);
+    	scrollingSwingTerminal.setForegroundColor(getKeyWordsColorRGBschema());
     	
     	Position position = new Position(word.getStartCaretPosition(), caret.getAbsolute_y());
 		for(Character character: characters){
@@ -175,6 +195,7 @@ public class UserTerminal extends JFrame implements ResizeListener{
 			position = getFollowingPosition(position);
 		}
 		scrollingSwingTerminal.disableSGR(SGR.BOLD);
+		scrollingSwingTerminal.setForegroundColor(getFontColorRGBschema());
 		scrollingSwingTerminal.putCharacter(' ');
     	
     	
@@ -240,8 +261,10 @@ public class UserTerminal extends JFrame implements ResizeListener{
 		for(Entry<Position, KeyStroke> entry: command.getPositionKeyMap().entrySet()){
 			if(entry.getValue() instanceof HighlightedKey){
 				scrollingSwingTerminal.enableSGR(SGR.BOLD);
+				scrollingSwingTerminal.setForegroundColor(getKeyWordsColorRGBschema());
 				scrollingSwingTerminal.putCharacter(entry.getValue().getCharacter());
 				scrollingSwingTerminal.disableSGR(SGR.BOLD);
+				scrollingSwingTerminal.setForegroundColor(getFontColorRGBschema());
 			}else{
 				scrollingSwingTerminal.putCharacter(entry.getValue().getCharacter());
 			}
@@ -354,6 +377,10 @@ public class UserTerminal extends JFrame implements ResizeListener{
     public Position getCaretPosition(){
     	return caret.getAbsolutePosition();
     }
+    
+    
+    
+   
     
     
     public void startUserTerminal() {
