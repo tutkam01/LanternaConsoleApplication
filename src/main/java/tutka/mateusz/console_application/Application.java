@@ -38,8 +38,12 @@ private UserTerminal userTerminal;
 
 	private void handleInputStream() throws InterruptedException, IOException {
 		while(true) {
-		    Thread.sleep(1);
+			try{
+//		    Thread.sleep(1);
 		    currentKey = userTerminal.readInput();
+			}catch(Exception e){
+				System.out.println(e);
+			}
 		    
 		    for(Map.Entry<KeyType, KeyHandler> entry: userTerminal.getKeys().entrySet()){
 		    	if(currentKey != null && currentKey.getKeyType().equals(entry.getKey())){

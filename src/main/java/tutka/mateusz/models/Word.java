@@ -9,10 +9,22 @@ public class Word {
 	private List<KeyStroke> wordKeys;
 	int startCaretPosition;
 	int endCaretPosition;
+	
+	Position startPosition;
+	Position endPosition;
+	Position startAbsolutePosition;
+	Position endAbsolutePosition;
+	
+	
 
 	public Word() {
 		this.wordKeys = new ArrayList<KeyStroke>();
 		this.startCaretPosition = 0;
+		
+		startPosition = new Position(0, 0);
+		endPosition = new Position(0, 0);
+		startAbsolutePosition = new Position(0,0);
+		endAbsolutePosition = new Position(0, 0);
 	}
 
 	public List<KeyStroke> getKeys() {
@@ -22,6 +34,11 @@ public class Word {
 	public void resetWord(){
 		this.wordKeys.clear();
 		this.startCaretPosition = Caret.getInstance().getX();
+		
+		startPosition = Caret.getInstance().getPosition();
+		endPosition = Caret.getInstance().getPosition();
+		startAbsolutePosition = Caret.getInstance().getAbsolutePosition();
+		endAbsolutePosition = Caret.getInstance().getAbsolutePosition();
 	}
 	
 	public void addKey(KeyStroke key){
@@ -42,5 +59,21 @@ public class Word {
 
 	public void setEndCaretPosition(int endCaretPosition) {
 		this.endCaretPosition = endCaretPosition;
+	}
+
+	public Position getStartPosition() {
+		return startPosition;
+	}
+
+	public Position getEndPosition() {
+		return endPosition;
+	}
+
+	public Position getStartAbsolutePosition() {
+		return startAbsolutePosition;
+	}
+
+	public Position getEndAbsolutePosition() {
+		return endAbsolutePosition;
 	}
 }
