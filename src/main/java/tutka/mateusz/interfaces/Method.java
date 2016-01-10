@@ -1,5 +1,5 @@
 package tutka.mateusz.interfaces;
 
 public interface Method {
-	void execute(String... args);
+	String execute(String... args) throws Exception;
 }

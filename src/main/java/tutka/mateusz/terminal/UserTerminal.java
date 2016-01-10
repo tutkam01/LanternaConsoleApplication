@@ -27,7 +27,7 @@ import tutka.mateusz.keys.F2KeyHandler;
 import tutka.mateusz.keys.HighlightedKey;
 import tutka.mateusz.keys.TabKeyHandler;
 import tutka.mateusz.models.Caret;
-import tutka.mateusz.models.Command;
+import tutka.mateusz.models.ConsoleCommand;
 import tutka.mateusz.models.Position;
 import tutka.mateusz.models.Word;
 import tutka.mateusz.models.terminalconfig.FontStyle;
@@ -55,8 +55,8 @@ public class UserTerminal extends JFrame implements ResizeListener{
     private Word word;
     private Map<KeyType, KeyHandler> keys;
     private Set<String> keyWords;
-    private ArrayList<Command> commandsHistory;
-    private Command currentCommand;
+    private ArrayList<ConsoleCommand> commandsHistory;
+    private ConsoleCommand currentCommand;
     private TerminalConfiguration terminalConfiguration;
     
     
@@ -68,8 +68,8 @@ public class UserTerminal extends JFrame implements ResizeListener{
     	this.caret = Caret.getInstance();
     	this.word = new Word();
     	this.keyWords = keyWords;
-    	this.commandsHistory = new ArrayList<Command>();
-    	this.currentCommand = new Command();
+    	this.commandsHistory = new ArrayList<ConsoleCommand>();
+    	this.currentCommand = new ConsoleCommand();
     	
     	keys = new HashMap<KeyType, KeyHandler>();
     	keys.put(KeyType.Enter, new EnterKeyHandler());
@@ -94,12 +94,18 @@ public class UserTerminal extends JFrame implements ResizeListener{
         
         scrollingSwingTerminal = new ScrollingSwingTerminal(
         		deviceConfig,
-                SwingTerminalFontConfiguration.newInstance(new Font("Monospaced", terminalConfiguration.getFontStyle().getStyle(), terminalConfiguration.getFontSize())),
+//                SwingTerminalFontConfiguration.newInstance(new Font("Courier New", terminalConfiguration.getFontStyle().getStyle(), terminalConfiguration.getFontSize())),
+        		SwingTerminalFontConfiguration.DEFAULT,
                 SwingTerminalColorConfiguration.DEFAULT);
         scrollingSwingTerminal.setForegroundColor(getFontColorRGBschema());
         panelTerminalContainer.add(scrollingSwingTerminal, BorderLayout.CENTER);
         scrollingSwingTerminal.addResizeListener(this);
         pack();
+    }
+    
+    private SwingTerminalFontConfiguration getfontConfiguration(){
+//    	SwingTerminalFontConfiguration.DEFAULT.
+    	return null;
     }
 
 	private RGB getFontColorRGBschema() {
@@ -113,15 +119,15 @@ public class UserTerminal extends JFrame implements ResizeListener{
 		return this.terminalConfiguration;
 	}
     
-    public ArrayList<Command> getCommandsHistory() {
+    public ArrayList<ConsoleCommand> getCommandsHistory() {
 		return commandsHistory;
 	}
 
-	public Command getCurrentCommand() {
+	public ConsoleCommand getCurrentCommand() {
 		return currentCommand;
 	}
 	
-	public void setCurrentCommand(Command command){
+	public void setCurrentCommand(ConsoleCommand command){
 		this.currentCommand = command;
 	}
 
@@ -164,7 +170,7 @@ public class UserTerminal extends JFrame implements ResizeListener{
     	return returnString(getWord().getKeys());
     }
     
-    private String changeStyle(String stringToFormat){
+    private String changeStyleToBold(String stringToFormat){
     	return stringToFormat.toUpperCase();
     }
     
@@ -177,7 +183,7 @@ public class UserTerminal extends JFrame implements ResizeListener{
     }
     
     public void putString(String stringToSend){
-    	List<Character> characters = returnCharacters(changeStyle(stringToSend));
+    	List<Character> characters = returnCharacters(changeStyleToBold(stringToSend));
     	try{
 //    		scrollingSwingTerminal.setCursorPosition(word.getStartCaretPosition(), caret.getY());
     		scrollingSwingTerminal.setCursorPosition(word.getStartPosition().getX(), word.getStartPosition().getY());
@@ -206,6 +212,20 @@ public class UserTerminal extends JFrame implements ResizeListener{
 		scrollingSwingTerminal.putCharacter(' ');
 		getCurrentCommand().getPositionKeyMap().put(position, new KeyStroke(' ', false, false));
     	
+    	
+    }
+    
+    public void sendResultToConsole(String result){
+    	List<Character> characters = returnCharacters(result);
+    	for(Character character: characters){
+    		if(character == '\n'){
+    			breakLine();
+    		}else{
+    			scrollingSwingTerminal.putCharacter(character);
+    			shiftCaret();
+    		}
+    	}
+    	shiftCaret();
     	
     }
     
@@ -262,7 +282,7 @@ public class UserTerminal extends JFrame implements ResizeListener{
 		getWord().resetWord();
 	}
 	
-	public void sendCommandToConsole(Command command){
+	public void sendCommandToConsole(ConsoleCommand command){
 		
 		scrollingSwingTerminal.setCursorPosition(getCurrentCommand().getCommandStartPosition().getX(), getCurrentCommand().getCommandStartPosition().getY());
 		
@@ -386,7 +406,17 @@ public class UserTerminal extends JFrame implements ResizeListener{
     	return caret.getAbsolutePosition();
     }
     
-    
+    public void breakLine(){
+    	int[] carretPosition = new int[]{0, (caret.getY()<getRowsNumber()-1)?(caret.getY() + 1): getRowsNumber()-1};
+		int[] absoluteCarretPosition = new int[]{0, caret.getAbsolute_y() + 1};
+		scrollingSwingTerminal.putCharacter('\n');
+		scrollingSwingTerminal.flush();
+		caret.setX(carretPosition[0]);
+		caret.setY(carretPosition[1]);
+		caret.setAbsolute_x(absoluteCarretPosition[0]);
+		caret.setAbsolute_y(absoluteCarretPosition[1]);
+		word.resetWord();
+    }
     
    
     

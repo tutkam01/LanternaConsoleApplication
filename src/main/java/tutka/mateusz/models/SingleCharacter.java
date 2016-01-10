@@ -1,7 +1,7 @@
 package tutka.mateusz.models;
 
 import com.googlecode.lanterna.input.KeyStroke;
-
+//not used
 public class SingleCharacter {
 	private int x;
 	private int y;

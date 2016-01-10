@@ -8,13 +8,13 @@ import com.googlecode.lanterna.input.KeyStroke;
 import tutka.mateusz.interfaces.KeyHandler;
 import tutka.mateusz.models.Position;
 import tutka.mateusz.terminal.UserTerminal;
-import tutka.mateusz.utils.CommandHandler;
+import tutka.mateusz.utils.ConsoleCommandHandler;
 
 public class DeleteKeyHandler implements KeyHandler {
 
 	public void handleKey(KeyStroke keyToHandle, UserTerminal userTerminal) {
 		
-		CommandHandler commandHandler = new CommandHandler(userTerminal) {
+		ConsoleCommandHandler commandHandler = new ConsoleCommandHandler(userTerminal) {
 
 			@Override
 			protected Position calculateNewCharactersPosition(UserTerminal userTerminal, Entry<Position, KeyStroke> entry) {

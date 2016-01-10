@@ -5,7 +5,7 @@ import java.util.Map.Entry;
 import com.googlecode.lanterna.input.KeyStroke;
 
 import tutka.mateusz.interfaces.KeyHandler;
-import tutka.mateusz.models.Command;
+import tutka.mateusz.models.ConsoleCommand;
 import tutka.mateusz.models.Position;
 import tutka.mateusz.terminal.UserTerminal;
 
@@ -26,7 +26,7 @@ public class ArrowDownKeyHandler extends ArrowUpDownKeyHandler implements KeyHan
 			counter = 1;
 		}
 		System.out.println("Down " + counter );
-		Command commandHistory = userTerminal.getCommandsHistory().get(userTerminal.getCommandsHistory().size() - counter);
+		ConsoleCommand commandHistory = userTerminal.getCommandsHistory().get(userTerminal.getCommandsHistory().size() - counter);
 		
 		int historyCommandLines = 0;
 		
@@ -34,7 +34,7 @@ public class ArrowDownKeyHandler extends ArrowUpDownKeyHandler implements KeyHan
 
 	}
 
-	private void handleHistoryCommand(UserTerminal userTerminal, Command commandHistory, int historyCommandLines) {
+	private void handleHistoryCommand(UserTerminal userTerminal, ConsoleCommand commandHistory, int historyCommandLines) {
 		if(!userTerminal.getCurrentCommand().getPositionKeyMap().isEmpty()){
 			historyCommandLines = commandHistory.getPositionKeyMap().size()/userTerminal.getColumnsNumber();
 			if(currentCommandLines<userTerminal.getCurrentCommand().getPositionKeyMap().size()/userTerminal.getColumnsNumber()){

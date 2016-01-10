@@ -7,7 +7,7 @@ import java.util.SortedMap;
 import tutka.mateusz.interfaces.KeyHandler;
 import tutka.mateusz.models.Position;
 import tutka.mateusz.terminal.UserTerminal;
-import tutka.mateusz.utils.CommandHandler;
+import tutka.mateusz.utils.ConsoleCommandHandler;
 
 import com.googlecode.lanterna.input.KeyStroke;
 
@@ -28,7 +28,7 @@ public class CharacterKeyHandler implements KeyHandler {
 		}
 		
 		ArrowUpKeyHandler.resetCounter();
-		CommandHandler commandHandler = new CommandHandler(userTerminal) {
+		ConsoleCommandHandler commandHandler = new ConsoleCommandHandler(userTerminal) {
 
 			@Override
 			protected Position calculateNewCharactersPosition(UserTerminal userTerminal, Entry<Position, KeyStroke> entry) {

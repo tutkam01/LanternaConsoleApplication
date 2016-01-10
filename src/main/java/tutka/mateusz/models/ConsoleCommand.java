@@ -7,18 +7,18 @@ import tutka.mateusz.terminal.UserTerminal;
 
 import com.googlecode.lanterna.input.KeyStroke;
 
-public class Command {
+public class ConsoleCommand {
 	private TreeMap<Position, KeyStroke> postionKeyMap;
 	private Position commandStartPosition;
 	private Position commandStartAbsolutePosition;
 	
-	public Command(){
+	public ConsoleCommand(){
 		postionKeyMap = new TreeMap<Position, KeyStroke>();
 		commandStartPosition = new Position(0, 0);
 		commandStartAbsolutePosition = new Position(0, 0);
 	}
 	
-	public Command(Command command){
+	public ConsoleCommand(ConsoleCommand command){
 		this();
 		
 		for(Entry<Position, KeyStroke> entry: command.getPositionKeyMap().entrySet()){
@@ -27,6 +27,15 @@ public class Command {
 		
 		commandStartPosition = command.getCommandStartPosition();
 		commandStartAbsolutePosition =  command.getCommandStartAbsolutePosition();
+	}
+	
+	public String toString(){
+		StringBuffer commandString = new StringBuffer();
+		for(KeyStroke keyStroke: postionKeyMap.values()){
+			commandString.append(keyStroke.getCharacter());
+		}
+		
+		return commandString.toString();
 	}
 	
 	public Position getCommandStartPosition() {

@@ -10,10 +10,10 @@ import tutka.mateusz.keys.HighlightedKey;
 import tutka.mateusz.models.Position;
 import tutka.mateusz.terminal.UserTerminal;
 
-public abstract class CommandHandler {
+public abstract class ConsoleCommandHandler {
 	private UserTerminal userTerminal;
 	
-	public CommandHandler(UserTerminal userTerminal){
+	public ConsoleCommandHandler(UserTerminal userTerminal){
 		this.userTerminal = userTerminal;
 	}
 	

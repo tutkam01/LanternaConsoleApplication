@@ -8,7 +8,7 @@ import com.googlecode.lanterna.input.KeyStroke;
 import tutka.mateusz.interfaces.KeyHandler;
 import tutka.mateusz.models.Position;
 import tutka.mateusz.terminal.UserTerminal;
-import tutka.mateusz.utils.CommandHandler;
+import tutka.mateusz.utils.ConsoleCommandHandler;
 
 public class BackspaceKeyHandler implements KeyHandler {
 
@@ -16,7 +16,7 @@ public class BackspaceKeyHandler implements KeyHandler {
 		ArrowLeftKeyHandler justLikeLeftArrow = new ArrowLeftKeyHandler();
 		justLikeLeftArrow.handleKey(null, userTerminal);
 		
-		CommandHandler commandHandler = new CommandHandler(userTerminal) {
+		ConsoleCommandHandler commandHandler = new ConsoleCommandHandler(userTerminal) {
 
 			@Override
 			protected Position calculateNewCharactersPosition(UserTerminal userTerminal, Entry<Position, KeyStroke> entry) {

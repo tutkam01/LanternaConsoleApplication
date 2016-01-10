@@ -46,16 +46,13 @@ public class Caret {
 		return absolute_x;
 	}
 
-
 	public void setAbsolute_x(int absolute_x) {
 		this.absolute_x = absolute_x;
 	}
 
-
 	public int getAbsolute_y() {
 		return absolute_y;
 	}
-
 
 	public void setAbsolute_y(int absolute_y) {
 		this.absolute_y = absolute_y;

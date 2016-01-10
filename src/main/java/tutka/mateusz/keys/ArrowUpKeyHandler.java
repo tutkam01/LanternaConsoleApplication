@@ -3,7 +3,7 @@ package tutka.mateusz.keys;
 import java.util.Map.Entry;
 
 import tutka.mateusz.interfaces.KeyHandler;
-import tutka.mateusz.models.Command;
+import tutka.mateusz.models.ConsoleCommand;
 import tutka.mateusz.models.Position;
 import tutka.mateusz.terminal.UserTerminal;
 
@@ -23,7 +23,7 @@ public class ArrowUpKeyHandler extends ArrowUpDownKeyHandler implements KeyHandl
 			counter = userTerminal.getCommandsHistory().size();
 		}
 		System.out.println("Up " + counter );
-		Command commandHistory = userTerminal.getCommandsHistory().get(userTerminal.getCommandsHistory().size() - counter);
+		ConsoleCommand commandHistory = userTerminal.getCommandsHistory().get(userTerminal.getCommandsHistory().size() - counter);
 		
 		int historyCommandLines = 0;
 		
@@ -31,7 +31,7 @@ public class ArrowUpKeyHandler extends ArrowUpDownKeyHandler implements KeyHandl
 
 	}
 
-	private void handleHistoryCommand(UserTerminal userTerminal, Command commandHistory, int historyCommandLines) {
+	private void handleHistoryCommand(UserTerminal userTerminal, ConsoleCommand commandHistory, int historyCommandLines) {
 		if(!userTerminal.getCurrentCommand().getPositionKeyMap().isEmpty()){
 			historyCommandLines = commandHistory.getPositionKeyMap().size()/userTerminal.getColumnsNumber();
 			if(currentCommandLines<userTerminal.getCurrentCommand().getPositionKeyMap().size()/userTerminal.getColumnsNumber()){
