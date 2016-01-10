@@ -85,6 +85,7 @@ public class UserTerminal extends JFrame implements ResizeListener{
     	keys.put(KeyType.Tab, new TabKeyHandler());
     	
         initComponents();
+//        terminalConfiguration = new TerminalConfiguration();
         terminalConfiguration = TerminalConfiguration.deserializeConfiguration();
 //        terminalConfiguration.setFontStyle(FontStyle.PLAIN);
 //        terminalConfiguration = new TerminalConfiguration();
@@ -95,7 +96,7 @@ public class UserTerminal extends JFrame implements ResizeListener{
         scrollingSwingTerminal = new ScrollingSwingTerminal(
         		deviceConfig,
 //                SwingTerminalFontConfiguration.newInstance(new Font("Courier New", terminalConfiguration.getFontStyle().getStyle(), terminalConfiguration.getFontSize())),
-        		SwingTerminalFontConfiguration.DEFAULT,
+        		getFontConfiguration(terminalConfiguration.getFontSize()),
                 SwingTerminalColorConfiguration.DEFAULT);
         scrollingSwingTerminal.setForegroundColor(getFontColorRGBschema());
         panelTerminalContainer.add(scrollingSwingTerminal, BorderLayout.CENTER);
@@ -103,9 +104,8 @@ public class UserTerminal extends JFrame implements ResizeListener{
         pack();
     }
     
-    private SwingTerminalFontConfiguration getfontConfiguration(){
-//    	SwingTerminalFontConfiguration.DEFAULT.
-    	return null;
+    private SwingTerminalFontConfiguration getFontConfiguration(int fontSize){
+    	return SwingTerminalFontConfiguration.getDefaultFontConfigWithCustomSize(fontSize);
     }
 
 	private RGB getFontColorRGBschema() {
