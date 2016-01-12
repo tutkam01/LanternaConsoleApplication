@@ -24,6 +24,8 @@ private Set<String> keyWords = new HashSet<String>();
 private KeyStroke currentKey;	
 private UserTerminal userTerminal;
 private static Application application;
+private String applicationConsoleWelcomeText;
+private String helpText;
 	
 	private Application(){
 		commandToMethodMap = new HashMap<String, Method>();
@@ -39,6 +41,16 @@ private static Application application;
 		return application;
 	}
 	
+	public Application withApplicationConsoleWelcomeText(String welcomeText){
+		this.applicationConsoleWelcomeText = welcomeText;
+		return this;
+	}
+	
+	public Application withHelpText(String helpText){
+		this.helpText = helpText;
+		return this;
+	}
+	
     public ApplicationCommandBuilder getApplicationCommandBuilder(){
     	return new ApplicationCommandBuilder();
     }
@@ -46,6 +58,7 @@ private static Application application;
 	public void run() throws InterruptedException, IOException{
 		userTerminal = new UserTerminal(getKeyWords());
 		userTerminal.startUserTerminal();
+		userTerminal.showApplicationWelcomeText(applicationConsoleWelcomeText + "\n");
 		handleInputStream();
 	}
 

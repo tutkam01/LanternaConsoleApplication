@@ -212,18 +212,27 @@ public class UserTerminal extends JFrame implements ResizeListener{
     }
     
     public void sendResultToConsole(String result){
-    	List<Character> characters = returnCharacters(result);
+    	sendTextToConsole(result);
+    	
+    }
+    
+    public void showApplicationWelcomeText(String welcomeText){
+    	if(!welcomeText.isEmpty()) sendTextToConsole(" " + welcomeText);
+    }
+    
+	private void sendTextToConsole(String text) {
+		List<Character> characters = returnCharacters(text);
     	for(Character character: characters){
     		if(character == '\n'){
     			breakLine();
     		}else{
     			scrollingSwingTerminal.putCharacter(character);
+    			scrollingSwingTerminal.flush();
     			shiftCaret();
     		}
     	}
     	shiftCaret();
-    	
-    }
+	}
     
     public Position getPrecedingPosition(Position referencePosition){
 		if(referencePosition.getX() == 0 && referencePosition.getY() > 0){
