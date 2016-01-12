@@ -13,6 +13,8 @@ import java.util.Set;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 
+import org.apache.commons.lang3.StringUtils;
+
 import tutka.mateusz.interfaces.KeyHandler;
 import tutka.mateusz.keys.ArrowDownKeyHandler;
 import tutka.mateusz.keys.ArrowLeftKeyHandler;
@@ -70,6 +72,8 @@ public class UserTerminal extends JFrame implements ResizeListener{
     	this.keyWords = keyWords;
     	this.commandsHistory = new ArrayList<ConsoleCommand>();
     	this.currentCommand = new ConsoleCommand();
+    	
+    	
     	
     	keys = new HashMap<KeyType, KeyHandler>();
     	keys.put(KeyType.Enter, new EnterKeyHandler());
@@ -217,7 +221,8 @@ public class UserTerminal extends JFrame implements ResizeListener{
     }
     
     public void showApplicationWelcomeText(String welcomeText){
-    	if(!welcomeText.isEmpty()) sendTextToConsole(" " + welcomeText);
+    	sendTextToConsole(" " + welcomeText);
+    	breakLine();
     }
     
 	private void sendTextToConsole(String text) {
@@ -231,7 +236,7 @@ public class UserTerminal extends JFrame implements ResizeListener{
     			shiftCaret();
     		}
     	}
-    	shiftCaret();
+//    	shiftCaret();
 	}
     
     public Position getPrecedingPosition(Position referencePosition){

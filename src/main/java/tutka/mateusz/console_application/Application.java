@@ -6,9 +6,12 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
+
 import tutka.mateusz.interfaces.KeyHandler;
 import tutka.mateusz.interfaces.Method;
 import tutka.mateusz.models.ApplicationCommand;
+import tutka.mateusz.models.Caret;
 import tutka.mateusz.terminal.UserTerminal;
 
 import com.googlecode.lanterna.input.KeyStroke;
@@ -58,7 +61,11 @@ private String helpText;
 	public void run() throws InterruptedException, IOException{
 		userTerminal = new UserTerminal(getKeyWords());
 		userTerminal.startUserTerminal();
-		userTerminal.showApplicationWelcomeText(applicationConsoleWelcomeText + "\n");
+		if(StringUtils.isNotBlank(applicationConsoleWelcomeText)){
+			userTerminal.showApplicationWelcomeText(applicationConsoleWelcomeText + "\n");
+			userTerminal.getCurrentCommand().setCommandStartPosition(Caret.getInstance().getPosition());
+			userTerminal.getCurrentCommand().setCommandStartAbsolutePosition(Caret.getInstance().getAbsolutePosition());
+		}
 		handleInputStream();
 	}
 

@@ -7,7 +7,7 @@ import tutka.mateusz.console_application.Application;
 public class AppTest2 {
 	public static void main(String[] args) throws InterruptedException, IOException {
 		Application application = Application.getInstance()
-//											 .withApplicationConsoleWelcomeText("Hello console application,   \n this is example of welcome text!")
+											 .withApplicationConsoleWelcomeText("Hello console application,   \n this is example of welcome text!")
 											 .withHelpText("help text");
 		
 		application.getApplicationCommandBuilder().withKeyWord("set length")
