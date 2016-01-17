@@ -8,7 +8,9 @@ public class AppTest2 {
 	public static void main(String[] args) throws InterruptedException, IOException {
 		Application application = Application.getInstance()
 											 .withApplicationConsoleWelcomeText("Hello console application,   \n this is example of welcome text!")
-											 .withHelpText("help text");
+											 .withHelpText("To calculate square field for \n"
+											 		     + " RECTANGLE: set length x set height y, where both x and y are integer parameters"
+											 		     + "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n some text here");
 		
 		application.getApplicationCommandBuilder().withKeyWord("set length")
 												  .withKeyWord("set height")
@@ -21,7 +23,10 @@ public class AppTest2 {
 //    	application.getCommandToMethodMap().put("set", null);
 //    	application.getCommandToMethodMap().put("as child of", null);
 //    	application.getCommandToMethodMap().put("nowa dluga komenda", null);
-		 
-    	application.run();
+		try{ 
+			application.run();
+		}catch(Throwable e){
+			System.out.println(e);
+		}
 	}
 }

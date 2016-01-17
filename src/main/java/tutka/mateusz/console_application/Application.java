@@ -10,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import tutka.mateusz.interfaces.KeyHandler;
 import tutka.mateusz.interfaces.Method;
+import tutka.mateusz.keys.F1KeyHandler;
 import tutka.mateusz.models.ApplicationCommand;
 import tutka.mateusz.models.Caret;
 import tutka.mateusz.terminal.UserTerminal;
@@ -60,6 +61,7 @@ private String helpText;
 
 	public void run() throws InterruptedException, IOException{
 		userTerminal = new UserTerminal(getKeyWords());
+		userTerminal.getKeys().put(KeyType.F1, new F1KeyHandler(helpText));
 		userTerminal.startUserTerminal();
 		if(StringUtils.isNotBlank(applicationConsoleWelcomeText)){
 			userTerminal.showApplicationWelcomeText(applicationConsoleWelcomeText + "\n");
