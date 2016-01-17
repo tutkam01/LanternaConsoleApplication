@@ -445,12 +445,15 @@ public class UserTerminal extends JFrame implements ResizeListener{
     }
     
     public void enterPrivateMode(){
+    	
     	scrollingSwingTerminal.enterPrivateMode();
     }
     
     public void exitPrivateMode(){
     	scrollingSwingTerminal.exitPrivateMode();
     }
+    
+    
     
    
     
