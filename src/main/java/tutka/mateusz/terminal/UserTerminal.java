@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -38,6 +39,7 @@ import tutka.mateusz.models.terminalconfig.TerminalConfiguration;
 
 import com.googlecode.lanterna.SGR;
 import com.googlecode.lanterna.TerminalSize;
+import com.googlecode.lanterna.TextCharacter;
 import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.TextColor.RGB;
 import com.googlecode.lanterna.input.KeyStroke;
@@ -445,7 +447,11 @@ public class UserTerminal extends JFrame implements ResizeListener{
     }
     
     public void enterPrivateMode(){
-    	scrollingSwingTerminal.getSwingTerminal().getVirtualTerminal().getPrivateTextBuffer();
+    	int mainBufferSize = scrollingSwingTerminal.getSwingTerminal().getVirtualTerminal().getMainTextBuffer().getLineBuffer().size();
+    	List<List<TextCharacter>> temporaryPrivateBuffer = new ArrayList<List<TextCharacter>>(mainBufferSize);
+    	List<List<TextCharacter>> privateBuffer = scrollingSwingTerminal.getSwingTerminal().getVirtualTerminal().getPrivateTextBuffer().getLineBuffer();
+    	temporaryPrivateBuffer.addAll(privateBuffer);
+    	privateBuffer.addAll(temporaryPrivateBuffer);
     	scrollingSwingTerminal.enterPrivateMode();
     }
     
