@@ -232,6 +232,7 @@ public class UserTerminal extends JFrame implements ResizeListener{
     	scrollingSwingTerminal.clearScreen();
     	for(int i=0;i<helpText.length();i++){
     		scrollingSwingTerminal.putCharacter(helpText.charAt(i));
+    		handleEndOfTerminalRow();
     	}
     	scrollingSwingTerminal.putCharacter('\n');
     	scrollingSwingTerminal.putCharacter('\n');
@@ -447,21 +448,6 @@ public class UserTerminal extends JFrame implements ResizeListener{
     }
     
     public void enterPrivateMode(){
-//    	int mainBufferSize = scrollingSwingTerminal.getSwingTerminal().getVirtualTerminal().getMainTextBuffer().getLineBuffer().size();
-//    	List<List<TextCharacter>> temporaryPrivateBuffer = new ArrayList<List<TextCharacter>>(mainBufferSize);
-//    	List<List<TextCharacter>> privateBuffer = scrollingSwingTerminal.getSwingTerminal().getVirtualTerminal().getPrivateTextBuffer().getLineBuffer();
-//    	for(List<TextCharacter> line : privateBuffer){
-//    		
-//    		temporaryPrivateBuffer.add(line);
-//    	}
-//    	
-//    	for(int line = privateBuffer.size(); line<mainBufferSize; line++){
-//    		ArrayList<TextCharacter> newLine = new ArrayList<TextCharacter>(200);
-//            newLine.add(scrollingSwingTerminal.getSwingTerminal().getVirtualTerminal().getPrivateTextBuffer().getFillCharacter());
-//            temporaryPrivateBuffer.add(newLine);
-//    	}
-//    	privateBuffer.clear();
-//    	privateBuffer.addAll(temporaryPrivateBuffer);
     	scrollingSwingTerminal.enterPrivateMode();
     }
     

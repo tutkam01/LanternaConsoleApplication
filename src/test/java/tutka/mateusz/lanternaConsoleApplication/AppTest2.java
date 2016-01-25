@@ -10,7 +10,11 @@ public class AppTest2 {
 											 .withApplicationConsoleWelcomeText("Hello console application,   \n this is example of welcome text!")
 											 .withHelpText("To calculate square field for \n"
 											 		     + " RECTANGLE: set length x set height y, where both x and y are integer parameters"
-											 		     + "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n some text here");
+											 		     + "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n some text here"
+											 		    + "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n some text here"
+											 		   + "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n some text here"
+											 		  + "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n some text here"
+											 		 + "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n some text here");
 		
 		application.getApplicationCommandBuilder().withKeyWord("set length")
 												  .withKeyWord("set height")
