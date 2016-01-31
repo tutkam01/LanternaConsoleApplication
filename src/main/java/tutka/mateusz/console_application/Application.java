@@ -23,16 +23,20 @@ import com.googlecode.lanterna.input.KeyType;
  *
  */
 public class Application {
+public static final int DEFAULT = javax.swing.GroupLayout.DEFAULT_SIZE;
+private static Application application;
 private Map<String, Method> commandToMethodMap;
 private Set<String> keyWords = new HashSet<String>();
 private KeyStroke currentKey;	
 private UserTerminal userTerminal;
-private static Application application;
 private String applicationConsoleWelcomeText;
 private String helpText;
+private int height = DEFAULT;
+private int length = DEFAULT;
 	
 	private Application(){
 		commandToMethodMap = new HashMap<String, Method>();
+		commandToMethodMap.put("clean", null);
 	}
 	
 	public static Application getInstance(){
@@ -50,6 +54,16 @@ private String helpText;
 		return this;
 	}
 	
+	public Application withHeight(int height){
+		if(height > javax.swing.GroupLayout.DEFAULT_SIZE && height < Short.MAX_VALUE) this.height = height;
+		return this;
+	}
+	
+	public Application withLength(int length){
+		if(length > javax.swing.GroupLayout.DEFAULT_SIZE && length < Short.MAX_VALUE) this.length = length;
+		return this;
+	}
+	
 	public Application withHelpText(String helpText){
 		this.helpText = helpText;
 		return this;
@@ -60,7 +74,7 @@ private String helpText;
     }
 
 	public void run() throws InterruptedException, IOException{
-		userTerminal = new UserTerminal(getKeyWords());
+		userTerminal = new UserTerminal(keyWords, height, length);
 		userTerminal.getKeys().put(KeyType.F1, new F1KeyHandler(helpText));
 		userTerminal.startUserTerminal();
 		if(StringUtils.isNotBlank(applicationConsoleWelcomeText)){
@@ -72,33 +86,29 @@ private String helpText;
 	}
 
 	private void handleInputStream() throws InterruptedException, IOException {
-		while(true) {
-			try{
-//		    Thread.sleep(1);
-		    currentKey = userTerminal.readInput();
-			}catch(Exception e){
-				System.out.println(e);
+		while (true) {
+			currentKey = userTerminal.readInput();
+			if(currentKey == null || (userTerminal.isPrivateModeEnabled() && !currentKey.getKeyType().equals(KeyType.F1))) continue;
+			
+			for (Map.Entry<KeyType, KeyHandler> entry : userTerminal.getKeys().entrySet()) {
+				if (currentKey.getKeyType().equals(entry.getKey())) {
+					entry.getValue().handleKey(currentKey, userTerminal);
+				}
 			}
-		    
-		    for(Map.Entry<KeyType, KeyHandler> entry: userTerminal.getKeys().entrySet()){
-		    	if(currentKey != null && currentKey.getKeyType().equals(entry.getKey())){
-		    		entry.getValue().handleKey(currentKey, userTerminal);
-		    	}
-		    }
-		    
+
 		}
 	}
 	
-	public Set<String> getKeyWords(){
-//		Set<String> keyWords = new HashSet<String>();
+//	public Set<String> getKeyWords(){
+////		Set<String> keyWords = new HashSet<String>();
+////		
+////		for(String keyWord: commandToMethodMap.keySet()){
+////			keyWords.add(keyWord);
+////		}
 //		
-//		for(String keyWord: commandToMethodMap.keySet()){
-//			keyWords.add(keyWord);
-//		}
-		
-		return keyWords;
-	}
-	
+//		return keyWords;
+//	}
+//	
 	
 	public class ApplicationCommandBuilder {
 		private ApplicationCommand builtCommand = new ApplicationCommand();

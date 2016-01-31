@@ -81,23 +81,23 @@ public class TerminalConfigWindow extends CommonWindow {
                     new Button("OK", new Runnable(){
 
 						public void run() {
-							if(getColor(fontColor_R) != terminalConfiguration.getFontColor().getR()){
+							if(getColor(fontColor_R) != -1 && getColor(fontColor_R) != terminalConfiguration.getFontColor().getR()){
 								terminalConfiguration.getFontColor().setR(getColor(fontColor_R));
 							}
-							if (getColor(fontColor_G) != terminalConfiguration.getFontColor().getG()){
+							if (getColor(fontColor_G) != -1 && getColor(fontColor_G) != terminalConfiguration.getFontColor().getG()){
 								terminalConfiguration.getFontColor().setG(getColor(fontColor_G));
 							}
-							if (getColor(fontColor_B) != terminalConfiguration.getFontColor().getB()){
+							if (getColor(fontColor_B) != -1 && getColor(fontColor_B) != terminalConfiguration.getFontColor().getB()){
 								terminalConfiguration.getFontColor().setB(getColor(fontColor_B));
 							}
 							
-							if(getColor(keyWordColor_R) != terminalConfiguration.getKeyWordsColor().getR()){
+							if(getColor(keyWordColor_R) != -1 && getColor(keyWordColor_R) != terminalConfiguration.getKeyWordsColor().getR()){
 								terminalConfiguration.getKeyWordsColor().setR(getColor(keyWordColor_R));
 							}
-							if (getColor(keyWordColor_G) != terminalConfiguration.getKeyWordsColor().getG()){
+							if (getColor(keyWordColor_G)!= -1 && getColor(keyWordColor_G) != terminalConfiguration.getKeyWordsColor().getG()){
 								terminalConfiguration.getKeyWordsColor().setG(getColor(keyWordColor_G));
 							}
-							if (getColor(keyWordColor_B) != terminalConfiguration.getKeyWordsColor().getB()){
+							if (getColor(keyWordColor_B)!= -1 && getColor(keyWordColor_B) != terminalConfiguration.getKeyWordsColor().getB()){
 								terminalConfiguration.getKeyWordsColor().setB(getColor(keyWordColor_B));
 							}
 							
@@ -105,7 +105,7 @@ public class TerminalConfigWindow extends CommonWindow {
 								terminalConfiguration.setFontStyle((FontStyle)radioBoxList.getCheckedItem());
 							}
 							
-							if(Integer.valueOf(fontSize.getText()).intValue() != terminalConfiguration.getFontSize()){
+							if(getFontSize(fontSize.getText()) != -1 && getFontSize(fontSize.getText()) != terminalConfiguration.getFontSize()){
 								terminalConfiguration.setFontSize(Integer.valueOf(fontSize.getText()).intValue());
 							}
 							
@@ -119,8 +119,26 @@ public class TerminalConfigWindow extends CommonWindow {
         textGUI.addWindow(window);
     }
     
-    private int getColor(final TextBox fontColor_R) {
-		return Integer.valueOf(fontColor_R.getText()).intValue();
+    private int getColor(final TextBox fontColor_textbox) {
+    	 try{
+    		int colourCode = Integer.parseInt(fontColor_textbox.getText());
+    		if(colourCode > -1 && colourCode <256) return colourCode; 
+    	 }catch(Exception e){
+    		return -1; 
+    	 }
+    	 
+    	 return -1;
 	}
+    
+    private int getFontSize(String fontSize){
+    	try{
+    		int size = Integer.parseInt(fontSize);
+    		if(size>0 && size <129) return size;
+    	}catch(Exception e){
+    		return -1;
+    	}
+    	
+    	return -1;
+    }
 
 }

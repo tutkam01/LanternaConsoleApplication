@@ -20,6 +20,7 @@ public class F1KeyHandler implements KeyHandler {
 	}
 	public void handleKey(KeyStroke keyToHandle, UserTerminal userTerminal) {
 		if(privateMode){
+			userTerminal.getTerminal().getSwingTerminal().getVirtualTerminal().getCurrentTextBuffer().getLineBuffer().clear();
 			userTerminal.exitPrivateMode();
 			userTerminal.setCaretPosition(initialPosition);
 			
@@ -27,8 +28,8 @@ public class F1KeyHandler implements KeyHandler {
 		}else{
 			
 				initialPosition = Caret.getInstance().getPosition();
-				userTerminal.setCaretPosition(new Position(0, 0));
 				userTerminal.enterPrivateMode();
+				userTerminal.setCaretPosition(new Position(0, 0));
 				if(StringUtils.isNotBlank(helpText)){
 					userTerminal.showHelp(helpText + "\n" + EXIT_HINT);
 				}else{

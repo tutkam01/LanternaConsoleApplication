@@ -1,6 +1,7 @@
 package tutka.mateusz.terminal;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 import org.apache.commons.lang3.StringUtils;
@@ -63,20 +65,21 @@ public class UserTerminal extends JFrame implements ResizeListener{
     private ArrayList<ConsoleCommand> commandsHistory;
     private ConsoleCommand currentCommand;
     private TerminalConfiguration terminalConfiguration;
-    
-    
+    private int height;
+    private int length;    
+    private boolean isPrivateMode = false;
 
-    /**
+	/**
      * Creates new user's terminal.
      */	
-    public UserTerminal(Set<String> keyWords) {
+    public UserTerminal(Set<String> keyWords, int height, int length) {
     	this.caret = Caret.getInstance();
     	this.word = new Word();
     	this.keyWords = keyWords;
     	this.commandsHistory = new ArrayList<ConsoleCommand>();
     	this.currentCommand = new ConsoleCommand();
-    	
-    	
+    	this.height = height;
+    	this.length = length;
     	
     	keys = new HashMap<KeyType, KeyHandler>();
     	keys.put(KeyType.Enter, new EnterKeyHandler());
@@ -134,6 +137,10 @@ public class UserTerminal extends JFrame implements ResizeListener{
 	public void setCurrentCommand(ConsoleCommand command){
 		this.currentCommand = command;
 	}
+	
+	public boolean isPrivateModeEnabled(){
+		return isPrivateMode;
+	}
 
 	private void initComponents() {
         panelTerminalContainer = new javax.swing.JPanel();
@@ -149,13 +156,13 @@ public class UserTerminal extends JFrame implements ResizeListener{
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(panelTerminalContainer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(panelTerminalContainer, javax.swing.GroupLayout.DEFAULT_SIZE, length, Short.MAX_VALUE)
         )));
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(panelTerminalContainer, javax.swing.GroupLayout.DEFAULT_SIZE, 290, Short.MAX_VALUE)
+                .addComponent(panelTerminalContainer, javax.swing.GroupLayout.DEFAULT_SIZE, height, Short.MAX_VALUE)
         ));
 
         pack();
@@ -229,7 +236,7 @@ public class UserTerminal extends JFrame implements ResizeListener{
     }
     
     public void showHelp(String helpText){
-    	scrollingSwingTerminal.clearScreen();
+//    	scrollingSwingTerminal.clearScreen();
     	for(int i=0;i<helpText.length();i++){
     		scrollingSwingTerminal.putCharacter(helpText.charAt(i));
     		handleEndOfTerminalRow();
@@ -448,13 +455,48 @@ public class UserTerminal extends JFrame implements ResizeListener{
     }
     
     public void enterPrivateMode(){
+    	isPrivateMode = true;
     	scrollingSwingTerminal.enterPrivateMode();
     }
     
     public void exitPrivateMode(){
+    	isPrivateMode = false;
     	scrollingSwingTerminal.exitPrivateMode();
     }
     
+    private void resetCaret(){
+    	caret.setAbsolute_x(0);
+    	caret.setAbsolute_y(0);
+    	caret.setX(0);
+    	caret.setY(0);
+    }
+    
+    public void clearScreen() {
+    	int beforeCleanSize = scrollingSwingTerminal.getSwingTerminal().getVirtualTerminal().getCurrentTextBuffer().getLineBuffer().size();
+    	scrollingSwingTerminal.getSwingTerminal().getVirtualTerminal().getCurrentTextBuffer().getLineBuffer().clear();
+    	for(int line = 0; line < beforeCleanSize; line++){
+    		ArrayList<TextCharacter> newLine = new ArrayList<TextCharacter>(200);
+            newLine.add(TextCharacter.DEFAULT_CHARACTER);
+    		scrollingSwingTerminal.getSwingTerminal().getVirtualTerminal().getCurrentTextBuffer().getLineBuffer().add(newLine);
+    	}
+    	System.out.println(String.format("before clean y: %s", caret.getY()));
+    	System.out.println(String.format("before clean abs_y: %s", caret.getAbsolute_y()));
+    	moveCursorBy(0, -caret.getY());
+    	resetCaret();
+    	System.out.println(String.format("after clean x: %s", caret.getX()));
+    	System.out.println(String.format("after clean y: %s", caret.getY()));
+    	System.out.println(String.format("after clean abs_x: %s", caret.getAbsolute_x()));
+    	System.out.println(String.format("after clean abs_y: %s", caret.getAbsolute_y()));
+    	 SwingUtilities.invokeLater(new Runnable() {
+			
+			public void run() {
+				scrollingSwingTerminal.repaint();
+				
+			}
+		});
+    	
+//    	scrollingSwingTerminal.clearScreen();
+    }
     
     
    
@@ -483,6 +525,7 @@ public class UserTerminal extends JFrame implements ResizeListener{
 	public Set<String> getKeyWords() {
 		return keyWords;
 	}
+
 
 	
     

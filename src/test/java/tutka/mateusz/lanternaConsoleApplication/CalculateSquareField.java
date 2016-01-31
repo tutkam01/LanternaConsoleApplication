@@ -7,7 +7,7 @@ public class CalculateSquareField implements Method {
 	public String execute(String... args) throws Exception {
 	  Long	squareField;
 	  try{	
-		  squareField = Long.valueOf(args[0]).longValue() * Long.valueOf(args[1]).longValue();
+		  squareField = Long.parseLong(args[0]) * Long.parseLong(args[1]);
 	  }catch(NumberFormatException e){
 		  return "Please provide parameters as integers.. \n For example set length 3 set height 6";
 	  }
