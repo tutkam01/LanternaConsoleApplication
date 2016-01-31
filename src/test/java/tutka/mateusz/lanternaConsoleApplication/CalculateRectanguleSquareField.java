@@ -2,7 +2,7 @@ package tutka.mateusz.lanternaConsoleApplication;
 
 import tutka.mateusz.interfaces.Method;
 
-public class CalculateSquareField implements Method {
+public class CalculateRectanguleSquareField implements Method {
     
 	public String execute(String... args) throws Exception {
 	  Long	squareField;
