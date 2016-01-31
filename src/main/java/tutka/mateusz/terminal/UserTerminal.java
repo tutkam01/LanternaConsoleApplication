@@ -164,7 +164,6 @@ public class UserTerminal extends JFrame implements ResizeListener{
                 .addContainerGap()
                 .addComponent(panelTerminalContainer, javax.swing.GroupLayout.DEFAULT_SIZE, height, Short.MAX_VALUE)
         ));
-
         pack();
 
     }
@@ -483,6 +482,7 @@ public class UserTerminal extends JFrame implements ResizeListener{
     	System.out.println(String.format("before clean abs_y: %s", caret.getAbsolute_y()));
     	moveCursorBy(0, -caret.getY());
     	resetCaret();
+    	word.resetWord();
     	System.out.println(String.format("after clean x: %s", caret.getX()));
     	System.out.println(String.format("after clean y: %s", caret.getY()));
     	System.out.println(String.format("after clean abs_x: %s", caret.getAbsolute_x()));
@@ -519,6 +519,8 @@ public class UserTerminal extends JFrame implements ResizeListener{
             java.util.logging.Logger.getLogger(UserTerminal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         
+        scrollingSwingTerminal.getSwingTerminal().setFocusable(true);
+        scrollingSwingTerminal.getSwingTerminal().requestFocusInWindow();
         setVisible(true);
     }
 

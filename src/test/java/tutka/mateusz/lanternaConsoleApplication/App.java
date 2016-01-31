@@ -8,11 +8,11 @@ public class App{
 	public static void main(String[] args) throws InterruptedException, IOException {
 		Application application = Application.getInstance()
 											 .withHeight(Application.DEFAULT)
-											 .withLength(Application.DEFAULT)
+											 .withLength(900)
 											 .withApplicationConsoleWelcomeText("Hello console application,   \n this is example of welcome text!")
 											 .withHelpText("To calculate square field for \n"
-											 		     + " RECTANGLE: set length x set height y, where both x and y are integer parameters." +
-													       " CIRCLE: set r, where r is integer radius.");
+											 		     + " RECTANGLE: set length x set height y, where both x and y are integer parameters. \n" +
+													       " CIRCLE: set radius, where radius is integer parameter.");
 		
 		application.getApplicationCommandBuilder().withKeyWord("set length")
 												  .withKeyWord("set height")
