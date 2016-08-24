@@ -44,16 +44,11 @@ public abstract class ConsoleCommandHandler {
 		afterShift.putAll(notShiftedPart);			
 		addCurrentKeyToShifedPart(afterShift, keyToHandle, addCurrentKeyToShiftedPart);
 		shiftToShiftPart(userTerminal, afterShift, toShiftPart);
-//		setCursorToCurrentPosition(userTerminal);
 		return afterShift;
 	}
 
 	private void addCurrentKeyToShifedPart(TreeMap<Position, KeyStroke> afterShift, KeyStroke keyToHandle, boolean addCurrentKeyToShiftedPart) {
 		if(addCurrentKeyToShiftedPart) afterShift.put(getPrecedingPosition(getCaretPosition(userTerminal)), keyToHandle);
-	}
-
-	private void setCursorToCurrentPosition(UserTerminal userTerminal) {
-		userTerminal.getTerminal().setCursorPosition(userTerminal.getCaret().getX(), (userTerminal.getCaret().getY()<userTerminal.getRowsNumber()-1)?userTerminal.getCaret().getY(): userTerminal.getRowsNumber()-1);
 	}
 
 	public Position getCaretPosition(UserTerminal userTerminal) {
@@ -108,8 +103,6 @@ public abstract class ConsoleCommandHandler {
 			userTerminal.getTerminal().disableSGR(specialKey.getLayout());
 		}
 	}
-	
-		
 
 	protected abstract Position calculateNewCharactersPosition(UserTerminal userTerminal, Map.Entry<Position, KeyStroke> entry);
 	protected abstract SortedMap<Position, KeyStroke> getToShiftPart(UserTerminal userTerminal);

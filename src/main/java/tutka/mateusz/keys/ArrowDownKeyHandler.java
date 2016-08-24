@@ -10,9 +10,6 @@ import tutka.mateusz.models.Position;
 import tutka.mateusz.terminal.UserTerminal;
 
 public class ArrowDownKeyHandler extends ArrowUpDownKeyHandler implements KeyHandler {
-
-	
-	
 	private static int currentCommandLines = 0;
 	
 	public void handleKey(KeyStroke keyToHandle, UserTerminal userTerminal) {
@@ -25,7 +22,7 @@ public class ArrowDownKeyHandler extends ArrowUpDownKeyHandler implements KeyHan
 		if(counter > userTerminal.getCommandsHistory().size()){
 			counter = 1;
 		}
-		System.out.println("Down " + counter );
+		
 		ConsoleCommand commandHistory = userTerminal.getCommandsHistory().get(userTerminal.getCommandsHistory().size() - counter);
 		
 		int historyCommandLines = 0;

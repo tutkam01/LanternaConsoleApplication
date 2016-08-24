@@ -33,7 +33,6 @@ public class BackspaceKeyHandler implements KeyHandler {
 
 			@Override
 			protected SortedMap<Position, KeyStroke> getToShiftPart(UserTerminal userTerminal) {
-				System.out.println(getCaretPosition(userTerminal));
 				eraseDeletedCharacterFromScreen(userTerminal);
 				userTerminal.getCurrentCommand().getPositionKeyMap().remove(getCaretPosition(userTerminal));
 				return userTerminal.getCurrentCommand().getPositionKeyMap().tailMap(getFollowingPosition(getCaretPosition(userTerminal)));

@@ -68,6 +68,7 @@ public class UserTerminal extends JFrame implements ResizeListener{
     private int height;
     private int length;    
     private boolean isPrivateMode = false;
+    private boolean stopCalculationAnimation = false;
 
 	/**
      * Creates new user's terminal.
@@ -226,7 +227,11 @@ public class UserTerminal extends JFrame implements ResizeListener{
     }
     
     public void sendResultToConsole(String result){
-    	sendTextToConsole(result);
+    	synchronized (this) {
+    		sendTextToConsole(result);
+    		breakLine();
+			notifyAll();
+		}
     }
     
     public void showApplicationWelcomeText(String welcomeText){
@@ -282,7 +287,7 @@ public class UserTerminal extends JFrame implements ResizeListener{
 		scrollingSwingTerminal.flush();
 	}
 	
-	public void shiftCaret() {
+	public Position shiftCaret() {
 		handleEndOfTerminalRow();
 		
 		caret.setX(caret.getX() + 1);
@@ -290,6 +295,8 @@ public class UserTerminal extends JFrame implements ResizeListener{
 		
 		System.out.println("X = " + caret.getX());
 		System.out.println("Y = " + caret.getY());
+		
+		return caret.getPosition();
 	}
 	
 	public void handleKeyWords(KeyStroke currentKey){
@@ -429,6 +436,10 @@ public class UserTerminal extends JFrame implements ResizeListener{
 		return currentKey.getCharacter() == ' ';
 	}
 	
+	public boolean isStopCalculationAnimation(){
+		return stopCalculationAnimation;
+	}
+	
 	public boolean isCommandNotEmpty() {
 		return !currentCommand.getPositionKeyMap().isEmpty();
 	}
@@ -526,6 +537,10 @@ public class UserTerminal extends JFrame implements ResizeListener{
 
 	public Set<String> getKeyWords() {
 		return keyWords;
+	}
+	
+	public void setStopCalculationsTo(boolean state){
+		stopCalculationAnimation = state;
 	}
 
 

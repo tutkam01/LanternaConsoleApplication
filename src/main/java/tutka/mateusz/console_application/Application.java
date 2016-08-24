@@ -99,17 +99,6 @@ private int length = DEFAULT;
 		}
 	}
 	
-//	public Set<String> getKeyWords(){
-////		Set<String> keyWords = new HashSet<String>();
-////		
-////		for(String keyWord: commandToMethodMap.keySet()){
-////			keyWords.add(keyWord);
-////		}
-//		
-//		return keyWords;
-//	}
-//	
-	
 	public class ApplicationCommandBuilder {
 		private ApplicationCommand builtCommand = new ApplicationCommand();
 		
@@ -140,7 +129,5 @@ private int length = DEFAULT;
 	public Map<String, Method> getCommandToMethodMap() {
 		return commandToMethodMap;
 	}
-	
-	
 
 }

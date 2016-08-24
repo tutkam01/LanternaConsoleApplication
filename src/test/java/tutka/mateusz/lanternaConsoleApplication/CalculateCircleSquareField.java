@@ -11,7 +11,7 @@ public class CalculateCircleSquareField implements Method {
 		}catch(NumberFormatException e){
 			return "Please provide radius as integer.. \n For example set radius 100";
 		}
-		return String.valueOf(String.format("Square field of circle is: %s", Math.PI * radius * radius));
+		return String.valueOf(String.format("Square field of circle is: %f", Math.PI * radius * radius));
 	}
 
 }
