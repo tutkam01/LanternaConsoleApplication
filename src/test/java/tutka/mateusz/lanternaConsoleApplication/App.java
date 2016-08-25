@@ -3,7 +3,10 @@ package tutka.mateusz.lanternaConsoleApplication;
 import java.io.IOException;
 
 import tutka.mateusz.console_application.Application;
-
+/**
+ * This is example how to use this project to build your own console application.
+ * Please refer also to {@link CalculateRectanguleSquareField} and {@link CalculateCircleSquareField}
+ */
 public class App{
 	public static void main(String[] args) throws InterruptedException, IOException {
 		Application application = Application.getInstance()

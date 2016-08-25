@@ -2,14 +2,15 @@ package tutka.mateusz.lanternaConsoleApplication;
 
 import tutka.mateusz.interfaces.Method;
 
+/**
+ * This is example how to provide implementation of your calculation method, fulfilling {@link tutka.mateusz.interfaces.Method} contract.
+ *
+ */
 public class CalculateRectanguleSquareField implements Method {
     
 	public String execute(String... args) throws Exception {
 	  Long	squareField;
 	  try{	
-		  for(int i=1; i<100; i++){
-			  Thread.sleep(100);
-		  }
 		  squareField = Long.parseLong(args[0]) * Long.parseLong(args[1]);
 	  }catch(NumberFormatException e){
 		  return "Please provide parameters as integers.. \n For example set length 3 set height 6";

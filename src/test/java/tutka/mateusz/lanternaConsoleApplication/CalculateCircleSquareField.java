@@ -2,6 +2,10 @@ package tutka.mateusz.lanternaConsoleApplication;
 
 import tutka.mateusz.interfaces.Method;
 
+/**
+ * This is example how to provide implementation of your calculation method, fulfilling {@link tutka.mateusz.interfaces.Method} contract.
+ *
+ */
 public class CalculateCircleSquareField implements Method {
 
 	public String execute(String... args) throws Exception {

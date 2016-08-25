@@ -93,21 +93,14 @@ public class UserTerminal extends JFrame implements ResizeListener{
     	keys.put(KeyType.ArrowUp, new ArrowUpKeyHandler());
     	keys.put(KeyType.ArrowDown, new ArrowDownKeyHandler());
     	keys.put(KeyType.F2, new F2KeyHandler());
-//    	keys.put(KeyType.F1, new F1KeyHandler());
     	keys.put(KeyType.Tab, new TabKeyHandler());
     	
         initComponents();
-//        terminalConfiguration = new TerminalConfiguration();
         terminalConfiguration = TerminalConfiguration.deserializeConfiguration();
-//        terminalConfiguration.setFontStyle(FontStyle.PLAIN);
-//        terminalConfiguration = new TerminalConfiguration();
-//        terminalConfiguration.getFontColor().setR(192);
-//        TerminalConfiguration.serializeConfiguration(terminalConfiguration);
         SwingTerminalDeviceConfiguration deviceConfig =  new SwingTerminalDeviceConfiguration(2000, 500, CursorStyle.UNDER_BAR, getFontColorRGBschema(), true).withLineBufferScrollbackSize(150);
         
         scrollingSwingTerminal = new ScrollingSwingTerminal(
         		deviceConfig,
-//                SwingTerminalFontConfiguration.newInstance(new Font("Courier New", terminalConfiguration.getFontStyle().getStyle(), terminalConfiguration.getFontSize())),
         		SwingTerminalFontConfiguration.getDefaultFontConfigWithCustomSize(terminalConfiguration.getFontSize(), terminalConfiguration.getFontStyle().getStyle()),
                 SwingTerminalColorConfiguration.DEFAULT);
         scrollingSwingTerminal.setForegroundColor(getFontColorRGBschema());
@@ -196,7 +189,6 @@ public class UserTerminal extends JFrame implements ResizeListener{
     public void putString(String stringToSend){
     	List<Character> characters = returnCharacters(changeStyleToBold(stringToSend));
     	try{
-//    		scrollingSwingTerminal.setCursorPosition(word.getStartCaretPosition(), caret.getY());
     		scrollingSwingTerminal.setCursorPosition(word.getStartPosition().getX(), word.getStartPosition().getY());
     	}catch(IndexOutOfBoundsException e){
     		scrollingSwingTerminal.clearScreen();
@@ -210,7 +202,6 @@ public class UserTerminal extends JFrame implements ResizeListener{
     	scrollingSwingTerminal.enableSGR(SGR.BOLD);
     	scrollingSwingTerminal.setForegroundColor(getKeyWordsColorRGBschema());
     	
-//    	Position position = new Position(word.getStartCaretPosition(), caret.getAbsolute_y());
     	Position position = new Position(word.getStartPosition().getX(), word.getStartAbsolutePosition().getY());
 		for(Character character: characters){
 			scrollingSwingTerminal.putCharacter(character);
@@ -240,16 +231,12 @@ public class UserTerminal extends JFrame implements ResizeListener{
     }
     
     public void showHelp(String helpText){
-//    	scrollingSwingTerminal.clearScreen();
     	for(int i=0;i<helpText.length();i++){
     		scrollingSwingTerminal.putCharacter(helpText.charAt(i));
     		handleEndOfTerminalRow();
     	}
     	scrollingSwingTerminal.putCharacter('\n');
     	scrollingSwingTerminal.putCharacter('\n');
-//    	sendTextToConsole(helpText);
-//    	breakLine();
-//    	breakLine();
     }
     
 	private void sendTextToConsole(String text) {
@@ -506,12 +493,7 @@ public class UserTerminal extends JFrame implements ResizeListener{
 			}
 		});
     	
-//    	scrollingSwingTerminal.clearScreen();
     }
-    
-    
-   
-    
     
     public void startUserTerminal() {
         try {
