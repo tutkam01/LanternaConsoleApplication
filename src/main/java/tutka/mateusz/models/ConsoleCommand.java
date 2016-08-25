@@ -3,8 +3,6 @@ package tutka.mateusz.models;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
-import tutka.mateusz.terminal.UserTerminal;
-
 import com.googlecode.lanterna.input.KeyStroke;
 
 public class ConsoleCommand {
@@ -59,7 +57,6 @@ public class ConsoleCommand {
 	public TreeMap<Position, KeyStroke> getPositionKeyMap(){
 		return postionKeyMap;
 	}
-	
 	
 }
 

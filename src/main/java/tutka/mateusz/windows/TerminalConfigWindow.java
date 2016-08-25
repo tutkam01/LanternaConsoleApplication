@@ -24,10 +24,6 @@ public class TerminalConfigWindow extends CommonWindow {
 		this.terminalConfiguration = terminalConfiguration;
 	}
 
-//	public static void main(String[] args) throws IOException, InterruptedException {
-//        new TerminalConfigWindow(terminalConfiguration).run(args);
-//    }
-
     @Override
     public void init(WindowBasedTextGUI textGUI) {
         final BasicWindow window = new BasicWindow("Terminal configuration panel");

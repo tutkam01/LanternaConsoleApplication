@@ -7,7 +7,6 @@ public class Caret {
 	private int y;
 	private int absolute_x;
 	private int absolute_y;
-	private Position position;
 	
 	public static Caret getInstance(){
 		return caretInstance;

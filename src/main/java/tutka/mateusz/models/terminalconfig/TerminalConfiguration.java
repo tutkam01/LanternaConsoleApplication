@@ -93,8 +93,6 @@ public class TerminalConfiguration implements Serializable {
 	 
 	 public static void serializeConfiguration(TerminalConfiguration terminalConfiguration){
 	    	try {
-//	    		System.out.println(System.getProperty("user.dir"));
-//				FileOutputStream fs = new FileOutputStream(System.getProperty("user.dir") + "\\src\\main\\resources\\configuration.ser");
 	    		URL configuration = UserTerminal.class.getResource("/configuration.ser");
 	    		FileOutputStream fs = new FileOutputStream(new File(configuration.toURI()));
 	    		
@@ -106,7 +104,6 @@ public class TerminalConfiguration implements Serializable {
 			}catch(IOException e){
 				e.printStackTrace();
 			} catch (URISyntaxException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} 
 	    	

@@ -26,7 +26,6 @@ public class F1KeyHandler implements KeyHandler {
 			
 			privateMode = false;
 		}else{
-			
 				initialPosition = Caret.getInstance().getPosition();
 				userTerminal.enterPrivateMode();
 				userTerminal.setCaretPosition(new Position(0, 0));

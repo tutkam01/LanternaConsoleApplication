@@ -14,7 +14,7 @@ public abstract class CommonWindow {
 	        MultiWindowTextGUI textGUI = new MultiWindowTextGUI(screen);
 	        textGUI.setBlockingIO(false);
 	        textGUI.setEOFWhenNoWindows(true);
-	        textGUI.isEOFWhenNoWindows();   //No meaning, just to silence IntelliJ:s "is never used" alert
+	        textGUI.isEOFWhenNoWindows();   
 
 	        try {
 	            init(textGUI);
