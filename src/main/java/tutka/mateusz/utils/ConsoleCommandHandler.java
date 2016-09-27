@@ -20,8 +20,6 @@ public abstract class ConsoleCommandHandler {
    public void handleCommand(KeyStroke keyToHandle, boolean addCurrentKeyToShiftedPart){
 		
 		if(userTerminal.isCommandNotEmpty() && userTerminal.isCurrentCursorPositionInTheMiddleOfCommand()){
-			System.out.println("Caret: " + userTerminal.getCaret().getPosition().toString());
-			System.out.println("End command: " + userTerminal.getCurrentCommand().getPositionKeyMap().lastKey().toString());
 			
 			TreeMap<Position, KeyStroke> commandAfterShift = getCommandAfterShift(userTerminal, keyToHandle, addCurrentKeyToShiftedPart);
 			userTerminal.getCurrentCommand().getPositionKeyMap().clear();

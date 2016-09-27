@@ -280,9 +280,6 @@ public class UserTerminal extends JFrame implements ResizeListener{
 		caret.setX(caret.getX() + 1);
 		caret.setAbsolute_x(caret.getAbsolute_x() + 1);
 		
-		System.out.println("X = " + caret.getX());
-		System.out.println("Y = " + caret.getY());
-		
 		return caret.getPosition();
 	}
 	
@@ -476,15 +473,9 @@ public class UserTerminal extends JFrame implements ResizeListener{
             newLine.add(TextCharacter.DEFAULT_CHARACTER);
     		scrollingSwingTerminal.getSwingTerminal().getVirtualTerminal().getCurrentTextBuffer().getLineBuffer().add(newLine);
     	}
-    	System.out.println(String.format("before clean y: %s", caret.getY()));
-    	System.out.println(String.format("before clean abs_y: %s", caret.getAbsolute_y()));
     	moveCursorBy(0, -caret.getY());
     	resetCaret();
     	word.resetWord();
-    	System.out.println(String.format("after clean x: %s", caret.getX()));
-    	System.out.println(String.format("after clean y: %s", caret.getY()));
-    	System.out.println(String.format("after clean abs_x: %s", caret.getAbsolute_x()));
-    	System.out.println(String.format("after clean abs_y: %s", caret.getAbsolute_y()));
     	 SwingUtilities.invokeLater(new Runnable() {
 			
 			public void run() {

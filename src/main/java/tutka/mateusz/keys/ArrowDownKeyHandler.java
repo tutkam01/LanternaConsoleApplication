@@ -73,7 +73,6 @@ public class ArrowDownKeyHandler extends ArrowUpDownKeyHandler implements KeyHan
 		}
 		
 		userTerminal.getTerminal().setCursorPosition(userTerminal.getCaret().getX(), userTerminal.getCaret().getY());
-		System.out.println(userTerminal.getCurrentCommand().getPositionKeyMap());
 	}
 	
 	public static void resetVerticalShiftOfStartPoint(){

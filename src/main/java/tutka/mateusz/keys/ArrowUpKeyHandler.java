@@ -22,7 +22,7 @@ public class ArrowUpKeyHandler extends ArrowUpDownKeyHandler implements KeyHandl
 		if(counter <= 0){
 			counter = userTerminal.getCommandsHistory().size();
 		}
-		System.out.println("Up " + counter );
+		
 		ConsoleCommand commandHistory = userTerminal.getCommandsHistory().get(userTerminal.getCommandsHistory().size() - counter);
 		
 		int historyCommandLines = 0;
@@ -73,7 +73,6 @@ public class ArrowUpKeyHandler extends ArrowUpDownKeyHandler implements KeyHandl
 		}
 		
 		userTerminal.getTerminal().setCursorPosition(userTerminal.getCaret().getX(), userTerminal.getCaret().getY());
-		System.out.println(userTerminal.getCurrentCommand().getPositionKeyMap());
 	}
 	
 	
