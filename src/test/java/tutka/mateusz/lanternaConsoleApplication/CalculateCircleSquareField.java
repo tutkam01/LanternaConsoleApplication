@@ -8,7 +8,7 @@ import tutka.mateusz.interfaces.Method;
  */
 public class CalculateCircleSquareField implements Method {
 
-	public String execute(String... args) throws Exception {
+	public String execute(String... args){
 		long radius;
 		try{
 			radius = Long.parseLong(args[0]);

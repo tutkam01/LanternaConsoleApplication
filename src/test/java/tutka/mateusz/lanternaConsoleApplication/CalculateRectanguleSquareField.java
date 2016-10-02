@@ -8,7 +8,7 @@ import tutka.mateusz.interfaces.Method;
  */
 public class CalculateRectanguleSquareField implements Method {
     
-	public String execute(String... args) throws Exception {
+	public String execute(String... args){
 	  Long	squareField;
 	  try{	
 		  squareField = Long.parseLong(args[0]) * Long.parseLong(args[1]);

@@ -160,7 +160,7 @@ public class EnterKeyHandler implements KeyHandler {
 				}
 			} catch (Exception e) {
 				if (StringUtils.isNotBlank(e.getMessage())) {
-					terminal.sendResultToConsole(e.getMessage());
+					terminal.sendResultToConsole(e.toString() + '\n' + e.getMessage());
 				} else {
 					terminal.sendResultToConsole(e.toString());
 				}
