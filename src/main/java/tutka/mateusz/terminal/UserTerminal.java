@@ -495,7 +495,9 @@ public class UserTerminal extends JFrame implements ResizeListener{
     @Override
     public void processWindowEvent(WindowEvent e) {
         if (e.getID() == WindowEvent.WINDOW_CLOSING) {
-        	closingOperations.start();
+        	if(closingOperations != null){
+        		closingOperations.start();
+        	}
         	dispose();
         }
     }

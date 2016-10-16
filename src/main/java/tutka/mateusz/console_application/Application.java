@@ -124,7 +124,7 @@ private int length = DEFAULT;
 			
 			StringBuilder commandMask = new StringBuilder();
 			for(String keyWord: builtCommand.getCommandKeyWords()){
-				commandMask.append(keyWord).append(" (.*) ");
+				commandMask.append(keyWord).append("(.*)");
 			}
 			
 			commandToMethodMap.put(commandMask.toString(), builtCommand.getCalledMethod());

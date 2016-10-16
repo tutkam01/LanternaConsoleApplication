@@ -38,7 +38,7 @@ public class EnterKeyHandler implements KeyHandler {
 				calledMethod = entry.getValue();
 				for(int groupCounter=1; ;groupCounter++ ){
 					try{
-						methodArguments.add(matcher.group(groupCounter));
+						methodArguments.add(matcher.group(groupCounter).trim());
 					}catch(IndexOutOfBoundsException e){
 						break;
 					}
