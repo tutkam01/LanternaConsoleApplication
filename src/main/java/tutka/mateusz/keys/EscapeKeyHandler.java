@@ -10,7 +10,7 @@ import tutka.mateusz.terminal.UserTerminal;
 public class EscapeKeyHandler implements KeyHandler{
 
 	public void handleKey(KeyStroke keyToHandle, UserTerminal userTerminal) {
-		userTerminal.dispatchEvent(new WindowEvent(userTerminal, WindowEvent.WINDOW_CLOSING));		
+		userTerminal.dispatchEvent(new WindowEvent(userTerminal, WindowEvent.WINDOW_CLOSING));
 	}
 
 }

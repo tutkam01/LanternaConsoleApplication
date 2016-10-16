@@ -29,6 +29,7 @@ private Map<String, Method> commandToMethodMap;
 private Set<String> keyWords = new HashSet<String>();
 private KeyStroke currentKey;	
 private UserTerminal userTerminal;
+private Runnable closingOperations;
 private String applicationConsoleWelcomeText;
 private String helpText;
 private int height = DEFAULT;
@@ -54,6 +55,11 @@ private int length = DEFAULT;
 		return this;
 	}
 	
+	public Application withCleanupOperations(Runnable runnable){
+		closingOperations = runnable;
+		return this;
+	}
+	
 	public Application withHeight(int height){
 		if(height > javax.swing.GroupLayout.DEFAULT_SIZE && height < Short.MAX_VALUE) this.height = height;
 		return this;
@@ -76,6 +82,7 @@ private int length = DEFAULT;
 	public void run() throws InterruptedException, IOException{
 		userTerminal = new UserTerminal(keyWords, height, length);
 		userTerminal.getKeys().put(KeyType.F1, new F1KeyHandler(helpText));
+		if(closingOperations != null) userTerminal.setClosingOperations(new Thread(closingOperations));
 		userTerminal.startUserTerminal();
 		if(StringUtils.isNotBlank(applicationConsoleWelcomeText)){
 			userTerminal.showApplicationWelcomeText(applicationConsoleWelcomeText + "\n");

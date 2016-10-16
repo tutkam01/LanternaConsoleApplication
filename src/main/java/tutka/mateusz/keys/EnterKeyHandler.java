@@ -159,6 +159,18 @@ public class EnterKeyHandler implements KeyHandler {
 					terminal.setStopCalculationsTo(false);
 				}
 			} catch (Exception e) {
+				if(!terminal.isStopCalculationAnimation()){
+					terminal.setStopCalculationsTo(true);
+					synchronized (animation) {
+						try {
+							animation.wait();
+						} catch (InterruptedException e1) {
+							//life is brutal;-)
+						}finally{
+							terminal.setStopCalculationsTo(false);
+						}
+					}
+				}
 				if (StringUtils.isNotBlank(e.getMessage())) {
 					terminal.sendResultToConsole(e.toString() + '\n' + e.getMessage());
 				} else {

@@ -3,6 +3,7 @@ package tutka.mateusz.terminal;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -69,6 +70,7 @@ public class UserTerminal extends JFrame implements ResizeListener{
     private int length;    
     private boolean isPrivateMode = false;
     private boolean stopCalculationAnimation = false;
+    private Thread closingOperations;
 
 	/**
      * Creates new user's terminal.
@@ -484,6 +486,18 @@ public class UserTerminal extends JFrame implements ResizeListener{
 			}
 		});
     	
+    }
+    
+    public void setClosingOperations(Thread closingOperations) {
+		this.closingOperations = closingOperations;
+	}
+    
+    @Override
+    public void processWindowEvent(WindowEvent e) {
+        if (e.getID() == WindowEvent.WINDOW_CLOSING) {
+        	closingOperations.start();
+        	dispose();
+        }
     }
     
     public void startUserTerminal() {
