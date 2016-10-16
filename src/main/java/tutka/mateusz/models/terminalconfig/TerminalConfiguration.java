@@ -11,6 +11,8 @@ import java.io.Serializable;
 import java.net.URISyntaxException;
 import java.net.URL;
 
+import org.apache.commons.lang3.StringUtils;
+
 import tutka.mateusz.terminal.UserTerminal;
 
 public class TerminalConfiguration implements Serializable {
@@ -19,6 +21,7 @@ public class TerminalConfiguration implements Serializable {
 	private KeyWordsColor keyWordsColor = new KeyWordsColor(192, 192, 192);
 	private FontStyle fontStyle = FontStyle.PLAIN;
 	private int fontSize = 14;
+	private static String configFilePath = System.getProperty("terminalConfigFilePath");
 	
 	public TerminalConfiguration(){
 		
@@ -61,18 +64,13 @@ public class TerminalConfiguration implements Serializable {
 	}
 	
 	 public static TerminalConfiguration deserializeConfiguration(){
-	    	URL fontColorURL = UserTerminal.class.getResource("/configuration.ser");
 	    	ObjectInputStream os = null;
 	    	try {
-				FileInputStream fis = new FileInputStream(new File(fontColorURL.toURI()));
+				FileInputStream fis = new FileInputStream(new File(configFilePath + File.separator + "configuration.ser"));
 				os = new ObjectInputStream(fis);
 				return (TerminalConfiguration)os.readObject();
 			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (URISyntaxException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				return new TerminalConfiguration();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -81,9 +79,8 @@ public class TerminalConfiguration implements Serializable {
 				e.printStackTrace();
 			}finally{
 				try {
-					os.close();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
+					if(os != null)	os.close();
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
@@ -93,8 +90,7 @@ public class TerminalConfiguration implements Serializable {
 	 
 	 public static void serializeConfiguration(TerminalConfiguration terminalConfiguration){
 	    	try {
-	    		URL configuration = UserTerminal.class.getResource("/configuration.ser");
-	    		FileOutputStream fs = new FileOutputStream(new File(configuration.toURI()));
+	    		FileOutputStream fs = new FileOutputStream(configFilePath + File.separator + "configuration.ser");
 	    		
 				ObjectOutputStream os = new ObjectOutputStream(fs);
 				os.writeObject(terminalConfiguration);
@@ -102,8 +98,6 @@ public class TerminalConfiguration implements Serializable {
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}catch(IOException e){
-				e.printStackTrace();
-			} catch (URISyntaxException e) {
 				e.printStackTrace();
 			} 
 	    	
