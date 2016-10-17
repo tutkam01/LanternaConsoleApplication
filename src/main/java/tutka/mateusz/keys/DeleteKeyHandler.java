@@ -13,7 +13,6 @@ import tutka.mateusz.utils.ConsoleCommandHandler;
 public class DeleteKeyHandler implements KeyHandler {
 
 	public void handleKey(KeyStroke keyToHandle, UserTerminal userTerminal) {
-		
 		ConsoleCommandHandler commandHandler = new ConsoleCommandHandler(userTerminal) {
 
 			@Override

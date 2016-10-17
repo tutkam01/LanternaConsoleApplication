@@ -23,6 +23,7 @@ import com.googlecode.lanterna.input.KeyStroke;
 public class EnterKeyHandler implements KeyHandler {
 
 	public void handleKey(KeyStroke keyToHandle, UserTerminal userTerminal) {
+		
 		boolean matched = false;
 		
 		userTerminal.breakLine();
@@ -80,7 +81,9 @@ public class EnterKeyHandler implements KeyHandler {
 
 		synchronized (userTerminal) {
 			try {
-				if (matched && calledMethod != null) userTerminal.wait();
+				if (matched && calledMethod != null && !userTerminal.wasResultAlreadyPrinted()){
+					userTerminal.wait();
+				}
 				userTerminal.getCurrentCommand().setCommandStartPosition(new Position(Caret.getInstance().getX(), Caret.getInstance().getY()));
 				userTerminal.getCurrentCommand().setCommandStartAbsolutePosition(new Position(Caret.getInstance().getAbsolute_x(), Caret.getInstance().getAbsolute_y()));
 			} catch (InterruptedException e) {
@@ -148,6 +151,7 @@ public class EnterKeyHandler implements KeyHandler {
 		
 		public void run() {
 			try {
+				terminal.setWasResultAlreadyPrinted(false);
 				gate.await();
 				String poterntialResult = method.execute(arguments.toArray(new String[0]));
 				if (!poterntialResult.isEmpty()) {

@@ -8,7 +8,6 @@ import tutka.mateusz.terminal.UserTerminal;
 public class TabKeyHandler implements KeyHandler {
 
 	public void handleKey(KeyStroke keyToHandle, UserTerminal userTerminal) {
-		
 		String partialString = userTerminal.returnString();
 		String match = "";
 		int numberOfMatches = 0;

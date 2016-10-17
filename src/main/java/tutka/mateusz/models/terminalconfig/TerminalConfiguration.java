@@ -8,12 +8,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.net.URISyntaxException;
-import java.net.URL;
 
 import org.apache.commons.lang3.StringUtils;
-
-import tutka.mateusz.terminal.UserTerminal;
 
 public class TerminalConfiguration implements Serializable {
 	private static final long serialVersionUID = 2L;
@@ -21,7 +17,6 @@ public class TerminalConfiguration implements Serializable {
 	private KeyWordsColor keyWordsColor = new KeyWordsColor(192, 192, 192);
 	private FontStyle fontStyle = FontStyle.PLAIN;
 	private int fontSize = 14;
-	private static String configFilePath = System.getProperty("terminalConfigFilePath");
 	
 	public TerminalConfiguration(){
 		
@@ -66,7 +61,7 @@ public class TerminalConfiguration implements Serializable {
 	 public static TerminalConfiguration deserializeConfiguration(){
 	    	ObjectInputStream os = null;
 	    	try {
-				FileInputStream fis = new FileInputStream(new File(configFilePath + File.separator + "configuration.ser"));
+				FileInputStream fis = new FileInputStream(new File(getConfigFolder() + File.separator + "configuration.ser"));
 				os = new ObjectInputStream(fis);
 				return (TerminalConfiguration)os.readObject();
 			} catch (FileNotFoundException e) {
@@ -90,7 +85,7 @@ public class TerminalConfiguration implements Serializable {
 	 
 	 public static void serializeConfiguration(TerminalConfiguration terminalConfiguration){
 	    	try {
-	    		FileOutputStream fs = new FileOutputStream(configFilePath + File.separator + "configuration.ser");
+	    		FileOutputStream fs = new FileOutputStream(getConfigFolder() + File.separator + "configuration.ser");
 	    		
 				ObjectOutputStream os = new ObjectOutputStream(fs);
 				os.writeObject(terminalConfiguration);
@@ -102,4 +97,8 @@ public class TerminalConfiguration implements Serializable {
 			} 
 	    	
 	    }
+	 
+	 private static String getConfigFolder(){
+		 return (StringUtils.isNotBlank(System.getProperty("configFolder")))?System.getProperty("configFolder"):System.getProperty("user.dir");
+	 }
 }

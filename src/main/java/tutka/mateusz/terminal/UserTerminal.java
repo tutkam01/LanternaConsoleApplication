@@ -1,13 +1,10 @@
 package tutka.mateusz.terminal;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -16,8 +13,6 @@ import java.util.Set;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-
-import org.apache.commons.lang3.StringUtils;
 
 import tutka.mateusz.interfaces.KeyHandler;
 import tutka.mateusz.keys.ArrowDownKeyHandler;
@@ -29,7 +24,6 @@ import tutka.mateusz.keys.CharacterKeyHandler;
 import tutka.mateusz.keys.DeleteKeyHandler;
 import tutka.mateusz.keys.EnterKeyHandler;
 import tutka.mateusz.keys.EscapeKeyHandler;
-import tutka.mateusz.keys.F1KeyHandler;
 import tutka.mateusz.keys.F2KeyHandler;
 import tutka.mateusz.keys.HighlightedKey;
 import tutka.mateusz.keys.TabKeyHandler;
@@ -37,7 +31,6 @@ import tutka.mateusz.models.Caret;
 import tutka.mateusz.models.ConsoleCommand;
 import tutka.mateusz.models.Position;
 import tutka.mateusz.models.Word;
-import tutka.mateusz.models.terminalconfig.FontStyle;
 import tutka.mateusz.models.terminalconfig.TerminalConfiguration;
 
 import com.googlecode.lanterna.SGR;
@@ -70,6 +63,7 @@ public class UserTerminal extends JFrame implements ResizeListener{
     private int length;    
     private boolean isPrivateMode = false;
     private boolean stopCalculationAnimation = false;
+    private boolean wasResultAlreadyPrinted = false;
     private Thread closingOperations;
 
 	/**
@@ -224,7 +218,16 @@ public class UserTerminal extends JFrame implements ResizeListener{
     		sendTextToConsole(result);
     		breakLine();
 			notifyAll();
+			wasResultAlreadyPrinted = true;
 		}
+    }
+    
+    public boolean wasResultAlreadyPrinted(){
+    	return wasResultAlreadyPrinted;
+    }
+    
+    public void setWasResultAlreadyPrinted(boolean wasPrinted){
+    	wasResultAlreadyPrinted = wasPrinted;
     }
     
     public void showApplicationWelcomeText(String welcomeText){
@@ -531,9 +534,5 @@ public class UserTerminal extends JFrame implements ResizeListener{
 	public void setStopCalculationsTo(boolean state){
 		stopCalculationAnimation = state;
 	}
-
-
 	
-    
-    
 }
