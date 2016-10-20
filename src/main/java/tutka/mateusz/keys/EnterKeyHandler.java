@@ -155,8 +155,8 @@ public class EnterKeyHandler implements KeyHandler {
 				gate.await();
 				String poterntialResult = method.execute(arguments.toArray(new String[0]));
 				if (!poterntialResult.isEmpty()) {
-					terminal.setStopCalculationsTo(true);
 					synchronized (animation) {
+						terminal.setStopCalculationsTo(true);
 						animation.wait();
 					}
 					terminal.sendResultToConsole(poterntialResult);
