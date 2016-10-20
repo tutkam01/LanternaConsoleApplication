@@ -217,8 +217,8 @@ public class UserTerminal extends JFrame implements ResizeListener{
     	synchronized (this) {
     		sendTextToConsole(result);
     		breakLine();
+    		wasResultAlreadyPrinted = true;
 			notifyAll();
-			wasResultAlreadyPrinted = true;
 		}
     }
     

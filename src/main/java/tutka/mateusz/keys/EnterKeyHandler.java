@@ -22,6 +22,8 @@ import com.googlecode.lanterna.input.KeyStroke;
 
 public class EnterKeyHandler implements KeyHandler {
 
+	private static final int COMMAND_HISTORY_MAX_SIZE = 5;
+
 	public void handleKey(KeyStroke keyToHandle, UserTerminal userTerminal) {
 		
 		boolean matched = false;
@@ -69,25 +71,30 @@ public class EnterKeyHandler implements KeyHandler {
 		}
 		
 		
-		if (!userTerminal.getCurrentCommand().getPositionKeyMap().isEmpty()) userTerminal.getCommandsHistory().add(new ConsoleCommand(userTerminal.getCurrentCommand()));
-
-		ArrowUpDownKeyHandler.resetCounter();
-		ArrowUpKeyHandler.resetVerticalShiftOfStartPoint();
-		ArrowUpKeyHandler.resetCurrentCommandLinesNumber();
-		ArrowDownKeyHandler.resetVerticalShiftOfStartPoint();
-		ArrowDownKeyHandler.resetCurrentCommandLinesNumber();
-
-		userTerminal.getCurrentCommand().getPositionKeyMap().clear();
-
 		synchronized (userTerminal) {
-			try {
-				if (matched && calledMethod != null && !userTerminal.wasResultAlreadyPrinted()){
-					userTerminal.wait();
+			if (!userTerminal.getCurrentCommand().getPositionKeyMap().isEmpty()){
+				userTerminal.getCommandsHistory().add(new ConsoleCommand(userTerminal.getCurrentCommand()));
+				if(userTerminal.getCommandsHistory().size()>COMMAND_HISTORY_MAX_SIZE){
+					userTerminal.getCommandsHistory().remove(0);
 				}
-				userTerminal.getCurrentCommand().setCommandStartPosition(new Position(Caret.getInstance().getX(), Caret.getInstance().getY()));
-				userTerminal.getCurrentCommand().setCommandStartAbsolutePosition(new Position(Caret.getInstance().getAbsolute_x(), Caret.getInstance().getAbsolute_y()));
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+			}
+			if (matched && calledMethod != null && !userTerminal.wasResultAlreadyPrinted()){
+				try {
+					userTerminal.wait();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+	
+			ArrowUpDownKeyHandler.resetCounter();
+			ArrowUpKeyHandler.resetVerticalShiftOfStartPoint();
+			ArrowUpKeyHandler.resetCurrentCommandLinesNumber();
+			ArrowDownKeyHandler.resetVerticalShiftOfStartPoint();
+			ArrowDownKeyHandler.resetCurrentCommandLinesNumber();
+	
+			userTerminal.getCurrentCommand().getPositionKeyMap().clear();
+			userTerminal.getCurrentCommand().setCommandStartPosition(new Position(Caret.getInstance().getX(), Caret.getInstance().getY()));
+			userTerminal.getCurrentCommand().setCommandStartAbsolutePosition(new Position(Caret.getInstance().getAbsolute_x(), Caret.getInstance().getAbsolute_y()));
 			}
 		}
 
@@ -154,19 +161,19 @@ public class EnterKeyHandler implements KeyHandler {
 				terminal.setWasResultAlreadyPrinted(false);
 				gate.await();
 				String poterntialResult = method.execute(arguments.toArray(new String[0]));
-				if (!poterntialResult.isEmpty()) {
-					synchronized (animation) {
-						terminal.setStopCalculationsTo(true);
-						animation.wait();
-					}
-					terminal.sendResultToConsole(poterntialResult);
-					terminal.setStopCalculationsTo(false);
+				synchronized (animation) {
+					terminal.setStopCalculationsTo(true);
+					animation.wait();
 				}
+				if(StringUtils.isNotBlank(poterntialResult)){
+					terminal.sendResultToConsole(poterntialResult);
+				}
+				terminal.setStopCalculationsTo(false);
 			} catch (Exception e) {
 				if(!terminal.isStopCalculationAnimation()){
-					terminal.setStopCalculationsTo(true);
 					synchronized (animation) {
 						try {
+							terminal.setStopCalculationsTo(true);
 							animation.wait();
 						} catch (InterruptedException e1) {
 							//life is brutal;-)
@@ -185,5 +192,5 @@ public class EnterKeyHandler implements KeyHandler {
 		
 		
 	}
+	
 
-}

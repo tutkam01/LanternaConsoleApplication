@@ -4,7 +4,7 @@
 
   <groupId>tutka.mateusz</groupId>
   <artifactId>console_application</artifactId>
-  <version>1.1.1</version>
+  <version>1.1.2</version>
   <packaging>jar</packaging>
 
   <name>LanternaConsoleApplication</name>
